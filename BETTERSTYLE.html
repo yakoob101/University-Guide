@@ -1,0 +1,2771 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>International University Guide</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #ffffff;
+        --bg-secondary: #f5f5f3;
+        --bg-tertiary: #eeede9;
+        --text: #1a1a1a;
+        --text-secondary: #6b6b6b;
+        --border: rgba(0, 0, 0, 0.12);
+        --border-hover: rgba(0, 0, 0, 0.25);
+        --radius-md: 8px;
+        --radius-lg: 12px;
+        --radius-xl: 16px;
+        --blue-light: #e6f1fb;
+        --blue-dark: #0c447c;
+        --blue-mid: #185fa5;
+        --amber-light: #faeeda;
+        --amber-dark: #633806;
+        --green-light: #eaf3de;
+        --green-dark: #27500a;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #1e1e1e;
+          --bg-secondary: #2a2a2a;
+          --bg-tertiary: #242424;
+          --text: #f0f0f0;
+          --text-secondary: #a0a0a0;
+          --border: rgba(255, 255, 255, 0.12);
+          --border-hover: rgba(255, 255, 255, 0.3);
+          --blue-light: #0c2a45;
+          --blue-dark: #85b7eb;
+          --blue-mid: #378add;
+          --amber-light: #3a2a0a;
+          --amber-dark: #fac775;
+          --green-light: #1a2e08;
+          --green-dark: #c0dd97;
+        }
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+        background: var(--bg-tertiary);
+        color: var(--text);
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      .topbar {
+        background: var(--bg);
+        border-bottom: 0.5px solid var(--border);
+        padding: 0 2rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .topbar-inner {
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+      }
+
+      .brand {
+        padding: 1rem 0;
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--text);
+        white-space: nowrap;
+      }
+
+      .brand span {
+        color: var(--text-secondary);
+        font-weight: 400;
+        font-size: 13px;
+        margin-left: 6px;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 0;
+        flex: 1;
+      }
+
+      .tab {
+        padding: 0 16px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        font-size: 13px;
+        color: var(--text-secondary);
+        cursor: pointer;
+        border: none;
+        background: none;
+        border-bottom: 2px solid transparent;
+        transition:
+          color 0.15s,
+          border-color 0.15s;
+        white-space: nowrap;
+      }
+
+      .tab:hover {
+        color: var(--text);
+      }
+      .tab.active {
+        color: var(--text);
+        font-weight: 500;
+        border-bottom-color: var(--text);
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .page {
+        opacity: 0;
+        transform: translateY(15px);
+        max-height: 0;
+        overflow: hidden;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), max-height 0.45s ease;
+      }
+      .page.active {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 3000px;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      /* Search */
+      .search-wrap {
+        position: relative;
+        margin-bottom: 1.5rem;
+      }
+      .search-wrap i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+        color: var(--text-secondary);
+      }
+      .search-wrap input {
+        width: 100%;
+        padding: 10px 12px 10px 38px;
+        font-size: 14px;
+        border: 0.5px solid var(--border-hover);
+        border-radius: var(--radius-lg);
+        background: var(--bg);
+        color: var(--text);
+        outline: none;
+        transition: border-color 0.15s;
+      }
+      .search-wrap input:focus {
+        border-color: var(--blue-mid);
+        box-shadow: 0 0 0 3px rgba(24, 95, 165, 0.1);
+      }
+
+      /* Country grid */
+      .country-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+        gap: 12px;
+        margin-bottom: 1.5rem;
+      }
+
+      .country-card {
+        background: var(--bg);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 1rem 1.25rem;
+        cursor: pointer;
+        transition:
+          border-color 0.15s,
+          transform 0.1s;
+        user-select: none;
+      }
+      .country-card:hover {
+        border-color: var(--border-hover);
+        transform: translateY(-1px);
+      }
+      .country-card.active {
+        border: 1.5px solid var(--blue-mid);
+      }
+
+      .country-card .flag {
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+      .country-card h3 {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text);
+      }
+      .country-card .deadline {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 500;
+        margin-top: 8px;
+      }
+      .badge.info {
+        background: var(--blue-light);
+        color: var(--blue-dark);
+      }
+      .badge.warn {
+        background: var(--amber-light);
+        color: var(--amber-dark);
+      }
+      .badge.success {
+        background: var(--green-light);
+        color: var(--green-dark);
+      }
+
+      /* Detail panel */
+      .detail-panel {
+        background: var(--bg);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius-xl);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        animation: slideIn 0.2s ease;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .detail-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.25rem;
+      }
+
+      .detail-header h2 {
+        font-size: 18px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .detail-header .sub {
+        font-size: 13px;
+        color: var(--text-secondary);
+        font-weight: 400;
+      }
+
+      .close-btn {
+        background: var(--bg-secondary);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 4px 10px;
+        font-size: 12px;
+        color: var(--text-secondary);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .close-btn:hover {
+        color: var(--text);
+      }
+
+      .section-label {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin: 1rem 0 8px;
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      @media (max-width: 560px) {
+        .detail-grid {
+          grid-template-columns: 1fr;
+        }
+        .country-grid {
+          grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        }
+        .container {
+          padding: 1rem;
+        }
+        .topbar {
+          padding: 0 1rem;
+        }
+        .stats-row {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .req-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .req-list li {
+        font-size: 13px;
+        color: var(--text);
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        line-height: 1.5;
+      }
+      .req-list li::before {
+        content: "·";
+        color: var(--text-secondary);
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+
+      .portal-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        background: var(--bg-secondary);
+        border: 0.5px solid var(--border-hover);
+        border-radius: var(--radius-md);
+        font-size: 13px;
+        color: var(--text);
+        text-decoration: none;
+        margin: 0 6px 6px 0;
+        transition: border-color 0.15s;
+      }
+      .portal-link:hover {
+        border-color: var(--blue-mid);
+        color: var(--blue-mid);
+      }
+
+      .tags-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 0.5rem;
+      }
+      .tag {
+        padding: 3px 10px;
+        background: var(--bg-secondary);
+        border-radius: 20px;
+        font-size: 12px;
+        color: var(--text);
+      }
+
+      .acc-list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .acc-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 7px 12px;
+        background: var(--bg-secondary);
+        border-radius: var(--radius-md);
+        font-size: 13px;
+      }
+      .acc-item .rate {
+        padding: 2px 8px;
+        border-radius: 4px;
+        background: var(--blue-light);
+        color: var(--blue-dark);
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      /* Top 100 */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-bottom: 1.5rem;
+      }
+      .stat-card {
+        background: var(--bg);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 14px 16px;
+      }
+      .stat-card .val {
+        font-size: 24px;
+        font-weight: 500;
+        color: var(--text);
+      }
+      .stat-card .lbl {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-top: 2px;
+      }
+
+      .filter-row {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+      }
+      .filter-btn {
+        padding: 4px 12px;
+        font-size: 12px;
+        border: 0.5px solid var(--border-hover);
+        border-radius: 20px;
+        background: none;
+        cursor: pointer;
+        color: var(--text-secondary);
+        transition: all 0.15s;
+      }
+      .filter-btn:hover {
+        color: var(--text);
+        border-color: var(--text);
+      }
+      .filter-btn.active {
+        background: var(--text);
+        color: var(--bg);
+        border-color: var(--text);
+      }
+
+      .uni-list {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .uni-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 9px 14px;
+        background: var(--bg);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius-md);
+        font-size: 13px;
+        transition: border-color 0.1s;
+      }
+      .uni-item:hover {
+        border-color: var(--border-hover);
+      }
+      .uni-item .rank {
+        font-size: 12px;
+        color: var(--text-secondary);
+        width: 30px;
+        flex-shrink: 0;
+        font-weight: 500;
+      }
+      .uni-item .name {
+        flex: 1;
+        color: var(--text);
+      }
+      .uni-item .ctag {
+        font-size: 11px;
+        color: var(--text-secondary);
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
+
+      /* Checklist */
+      .checklist {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 1rem;
+      }
+      .check-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        background: var(--bg);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius-md);
+        transition: border-color 0.1s;
+      }
+      .check-item:hover {
+        border-color: var(--border-hover);
+      }
+      .check-item.done {
+        opacity: 0.55;
+      }
+      .check-item input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        accent-color: var(--blue-mid);
+        flex-shrink: 0;
+      }
+      .check-item label {
+        font-size: 14px;
+        color: var(--text);
+        cursor: pointer;
+        flex: 1;
+        line-height: 1.5;
+      }
+      .check-item.done label {
+        text-decoration: line-through;
+        color: var(--text-secondary);
+      }
+
+      .progress-bar-wrap {
+        background: var(--bg);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .progress-bar-wrap .count {
+        font-size: 13px;
+        color: var(--text-secondary);
+        white-space: nowrap;
+      }
+      .pbar-track {
+        flex: 1;
+        height: 6px;
+        background: var(--bg-secondary);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .pbar-fill {
+        height: 100%;
+        background: var(--blue-mid);
+        border-radius: 3px;
+        transition: width 0.3s ease;
+      }
+
+      .no-results {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-secondary);
+        font-size: 14px;
+      }
+
+      /* Welcome page */
+      #welcome-screen {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        background: var(--bg-tertiary);
+      }
+      .welcome-globe {
+        font-size: 72px;
+        margin-bottom: 1.5rem;
+        animation: floatIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .welcome-title {
+        font-size: 36px;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1.2;
+        margin-bottom: 0.75rem;
+        animation: floatIn 0.8s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .welcome-title span {
+        color: var(--blue-mid);
+      }
+      .welcome-sub {
+        font-size: 16px;
+        color: var(--text-secondary);
+        max-width: 480px;
+        line-height: 1.7;
+        margin-bottom: 2.5rem;
+        animation: floatIn 0.8s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .welcome-stats {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 2.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        animation: floatIn 0.8s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .welcome-stat {
+        text-align: center;
+      }
+      .welcome-stat .num {
+        font-size: 28px;
+        font-weight: 600;
+        color: var(--blue-mid);
+      }
+      .welcome-stat .lbl {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-top: 2px;
+      }
+      .welcome-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 32px;
+        background: var(--blue-mid);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius-lg);
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+        transition:
+          opacity 0.15s,
+          transform 0.1s;
+        animation: floatIn 0.8s 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .welcome-btn:hover {
+        opacity: 0.88;
+        transform: translateY(-1px);
+      }
+      .welcome-btn:active {
+        transform: scale(0.98);
+      }
+      .welcome-features {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        max-width: 620px;
+        width: 100%;
+        margin-top: 2.5rem;
+        animation: floatIn 0.8s 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      @media (max-width: 500px) {
+        .welcome-features {
+          grid-template-columns: 1fr;
+        }
+        .welcome-title {
+          font-size: 26px;
+        }
+        .welcome-stats {
+          gap: 1.5rem;
+        }
+      }
+      .welcome-feature {
+        background: var(--bg);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 1rem;
+        text-align: left;
+      }
+      .welcome-feature .ficon {
+        font-size: 18px;
+        margin-bottom: 6px;
+        color: var(--blue-mid);
+      }
+      .welcome-feature h4 {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+        margin-bottom: 3px;
+      }
+      .welcome-feature p {
+        font-size: 12px;
+        color: var(--text-secondary);
+        line-height: 1.5;
+      }
+      .welcome-credit {
+        position: absolute;
+        bottom: 1.5rem;
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
+      .welcome-credit strong {
+        color: var(--text);
+        font-weight: 500;
+      }
+      @keyframes floatIn {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .app-footer {
+        text-align: center;
+        padding: 2rem;
+        font-size: 12px;
+        color: var(--text-secondary);
+        border-top: 0.5px solid var(--border);
+        margin-top: 2rem;
+      }
+      .app-footer strong {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      .uni-item {
+        cursor: pointer;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .uni-item-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+      }
+      .uni-item.open {
+        border-color: var(--blue-mid);
+      }
+      .uni-expand {
+        display: none;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 0.5px solid var(--border);
+      }
+      .uni-item.open .uni-expand {
+        display: block;
+      }
+      .uni-expand ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 10px;
+      }
+      .uni-expand ul li {
+        font-size: 13px;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: flex-start;
+        gap: 7px;
+        line-height: 1.5;
+      }
+      .uni-expand ul li::before {
+        content: "·";
+        flex-shrink: 0;
+      }
+      .uni-site-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 12px;
+        background: var(--blue-light);
+        color: var(--blue-dark);
+        border-radius: var(--radius-md);
+        font-size: 12px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: opacity 0.15s;
+      }
+      .uni-site-link:hover {
+        opacity: 0.8;
+      }
+      .chevron {
+        font-size: 14px;
+        color: var(--text-secondary);
+        transition: transform 0.2s;
+        margin-left: auto;
+        flex-shrink: 0;
+      }
+      .uni-item.open .chevron {
+        transform: rotate(180deg);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- WELCOME SCREEN -->
+    <div id="welcome-screen">
+      <div class="welcome-globe">🌍</div>
+      <h1 class="welcome-title">
+        Your <span>international</span><br />university guide
+      </h1>
+      <p class="welcome-sub">
+        Everything an International student needs to apply abroad — portals,
+        deadlines, requirements, and the world's top 100 universities, all in
+        one place.
+      </p>
+      <div class="welcome-stats">
+        <div class="welcome-stat">
+          <div class="num">13</div>
+          <div class="lbl">countries covered</div>
+        </div>
+        <div class="welcome-stat">
+          <div class="num">100</div>
+          <div class="lbl">top universities</div>
+        </div>
+        <div class="welcome-stat">
+          <div class="num">26</div>
+          <div class="lbl">nations ranked</div>
+        </div>
+      </div>
+      <button class="welcome-btn" onclick="enterApp()">
+        <i class="ti ti-arrow-right" aria-hidden="true"></i>
+        Get started
+      </button>
+      <div class="welcome-features">
+        <div class="welcome-feature">
+          <div class="ficon">
+            <i class="ti ti-map-pin" aria-hidden="true"></i>
+          </div>
+          <h4>Country guide</h4>
+          <p>Portals, deadlines &amp; requirements for 13 countries</p>
+        </div>
+        <div class="welcome-feature">
+          <div class="ficon">
+            <i class="ti ti-trophy" aria-hidden="true"></i>
+          </div>
+          <h4>Top 100 list</h4>
+          <p>Browse the world's best universities with quick facts and links</p>
+        </div>
+        <div class="welcome-feature">
+          <div class="ficon">
+            <i class="ti ti-checklist" aria-hidden="true"></i>
+          </div>
+          <h4>Checklist</h4>
+          <p>Track every document you need to gather before applying</p>
+        </div>
+      </div>
+      <div class="welcome-credit">
+        Designed by <strong>Yakoob Ahmed</strong>
+      </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="main-app" style="display: none">
+      <nav class="topbar">
+        <div class="topbar-inner">
+          <div class="brand">
+            University Guide <span>for South African applicants</span>
+          </div>
+          <div class="tabs">
+            <button class="tab active" onclick="showTab('countries', this)">
+              Countries
+            </button>
+            <button class="tab" onclick="showTab('top100', this)">
+              Top 100
+            </button>
+            <button class="tab" onclick="showTab('checklist', this)">
+              Checklist
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <div class="container">
+        <!-- COUNTRIES TAB -->
+        <div id="page-countries" class="page active">
+          <div class="search-wrap">
+            <i class="ti ti-search" aria-hidden="true"></i>
+            <input
+              type="text"
+              placeholder="Search countries..."
+              oninput="filterCountries(this.value)"
+            />
+          </div>
+          <div class="country-grid" id="country-grid"></div>
+          <div id="country-detail"></div>
+        </div>
+
+        <!-- TOP 100 TAB -->
+        <div id="page-top100" class="page">
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="val">100</div>
+              <div class="lbl">universities</div>
+            </div>
+            <div class="stat-card">
+              <div class="val">26</div>
+              <div class="lbl">countries</div>
+            </div>
+            <div class="stat-card">
+              <div class="val">18</div>
+              <div class="lbl">USA slots</div>
+            </div>
+            <div class="stat-card">
+              <div class="val">13</div>
+              <div class="lbl">UK slots</div>
+            </div>
+          </div>
+          <div class="search-wrap">
+            <i class="ti ti-search" aria-hidden="true"></i>
+            <input
+              type="text"
+              id="uni-search"
+              placeholder="Search universities or countries..."
+              oninput="filterUnis()"
+            />
+          </div>
+          <div class="filter-row" id="filter-row"></div>
+          <div class="uni-list" id="uni-list"></div>
+        </div>
+
+        <!-- CHECKLIST TAB -->
+        <div id="page-checklist" class="page">
+          <div class="progress-bar-wrap">
+            <span class="count" id="progress-count">0 / 0 completed</span>
+            <div class="pbar-track">
+              <div class="pbar-fill" id="pbar" style="width: 0%"></div>
+            </div>
+          </div>
+          <div id="checklist-content"></div>
+        </div>
+      </div>
+
+      <footer class="app-footer">
+        Designed by <strong>Yakoob Ahmed</strong>
+      </footer>
+    </div>
+    <!-- end #main-app -->
+
+    <script>
+      const COUNTRIES = [
+        {
+          id: "uk",
+          flag: "🇬🇧",
+          name: "United Kingdom",
+          deadline: "May (UCAS opens 13 May)",
+          portals: [
+            {
+              name: "UCAS",
+              url: "https://www.ucas.com/applying/before-you-apply",
+            },
+          ],
+          requirements: [
+            "NSC / Matric results (certified copies)",
+            "Personal statement",
+            "Reference / recommendation letters",
+            "English proficiency proof",
+          ],
+          notes: [
+            "Cannot apply to both Oxford AND Cambridge in the same year",
+            "UCAS portal opens 13 May — set up your account early",
+            "Up to 5 university choices on UCAS",
+          ],
+          unis: [
+            "Imperial College London",
+            "University College London (UCL)",
+            "University of Oxford",
+            "University of Cambridge",
+            "University of Edinburgh",
+            "King's College London",
+            "University of Manchester",
+            "LSE",
+            "University of Warwick",
+            "Durham University",
+          ],
+          acceptance: {
+            "University of Oxford": "~10%",
+            "Imperial College London": "11%",
+            UCL: "30%",
+          },
+          badge: "info",
+          badgeText: "UCAS portal",
+        },
+        {
+          id: "switzerland",
+          flag: "🇨🇭",
+          name: "Switzerland",
+          deadline: "1 December (ETH Zurich)",
+          portals: [
+            {
+              name: "ETH Zurich portal",
+              url: "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate.html",
+            },
+          ],
+          requirements: [
+            "NSC / Matric results",
+            "Entrance exam (required)",
+            "SA university admission for selected program (optional)",
+          ],
+          notes: [
+            "Entry exam is required for most programs at ETH",
+            "Very high academic standards — ETH is ranked #7 globally",
+            "EPFL also excellent for engineering/sciences",
+          ],
+          unis: ["ETH Zurich (ETHZ)", "University of Zurich", "EPFL"],
+          acceptance: { "ETH Zurich": "25%" },
+          badge: "warn",
+          badgeText: "Entrance exam",
+        },
+        {
+          id: "usa",
+          flag: "🇺🇸",
+          name: "USA",
+          deadline: "Starts November",
+          portals: [
+            { name: "Common App", url: "https://www.commonapp.org" },
+            {
+              name: "Coalition App",
+              url: "https://www.coalitionforcollegeaccess.org",
+            },
+            { name: "MIT (MyMIT)", url: "https://mitadmissions.org/apply/" },
+            {
+              name: "UC Application",
+              url: "https://apply.universityofcalifornia.edu/",
+            },
+          ],
+          requirements: [
+            "NSC grades 9–12 (focus on Grade 12)",
+            "SAT or ACT scores (test-optional at most schools but help)",
+            "Personal statement (650 words on Common App)",
+            "Supplemental essays (university-specific)",
+            "2 teacher letters of recommendation + counselor letter",
+          ],
+          notes: [
+            "Common App covers ~14 of the top 18 US universities (20 school limit)",
+            "UC Application covers both UC Berkeley and UCLA with one form",
+            "MIT, Caltech, and UMich each have their own portals",
+            "Georgetown also uses its own portal",
+            "Early Decision / Early Action deadlines are usually November 1–15",
+          ],
+          unis: [
+            "MIT",
+            "Harvard",
+            "Stanford",
+            "Yale",
+            "Princeton",
+            "Columbia",
+            "Cornell",
+            "Duke",
+            "Caltech",
+            "NYU",
+            "UC Berkeley",
+            "UCLA",
+            "Carnegie Mellon",
+            "Northwestern",
+            "University of Pennsylvania",
+            "University of Chicago",
+            "Johns Hopkins",
+            "University of Michigan",
+          ],
+          acceptance: {
+            Princeton: "4.5%",
+            Harvard: "3%",
+            Stanford: "3%",
+            Caltech: "3%",
+            MIT: "4%",
+            Yale: "4%",
+            Brown: "5%",
+            Duke: "5%",
+            Cornell: "10%",
+            NYU: "9.5%",
+            "Boston Univ.": "19%",
+          },
+          badge: "warn",
+          badgeText: "SAT/ACT needed",
+        },
+        {
+          id: "germany",
+          flag: "🇩🇪",
+          name: "Germany",
+          deadline: "October / April",
+          portals: [
+            { name: "uni-assist", url: "https://www.uni-assist.de/en/" },
+          ],
+          requirements: [
+            "NSC / Matric results",
+            "Letter of motivation",
+            "CV / Resume",
+            "References (ROFs)",
+          ],
+          notes: [
+            "Very low or no tuition fees — extremely affordable",
+            "Studienkolleg (foundation year) required if subject choice doesn't match",
+            "Look for Non-NC programs — guaranteed spot if minimum grade is met",
+            "Both summer and winter semesters available (varies by university)",
+            "VPD certificate may be needed (university-specific)",
+            "uni-assist helps with application processing (not required by all unis)",
+          ],
+          unis: [
+            "Technical University of Munich (TUM)",
+            "LMU Munich",
+            "Heidelberg University",
+            "Humboldt University of Berlin",
+            "Freie Universität Berlin",
+            "Charité – Universitätsmedizin Berlin",
+          ],
+          acceptance: { TUM: "8%" },
+          badge: "success",
+          badgeText: "Cheap/free fees",
+        },
+        {
+          id: "australia",
+          flag: "🇦🇺",
+          name: "Australia",
+          deadline: "October / January",
+          portals: [],
+          requirements: [
+            "NSC / Matric results",
+            "General Statement (similar to personal statement)",
+          ],
+          notes: [
+            "2 semesters per year — February and July intakes",
+            "Apply directly through each university's own website",
+            "UNSW, Melbourne, Sydney, and ANU are top choices",
+            "Strong student support networks for international applicants",
+          ],
+          unis: [
+            "University of Melbourne",
+            "University of Sydney",
+            "UNSW",
+            "Australian National University (ANU)",
+            "Monash University",
+            "University of Queensland",
+          ],
+          acceptance: { UNSW: "50%" },
+          badge: "info",
+          badgeText: "2 semesters",
+        },
+        {
+          id: "france",
+          flag: "🇫🇷",
+          name: "France",
+          deadline: "October 1",
+          portals: [
+            {
+              name: "Études en France",
+              url: "https://pastel.diplomatie.gouv.fr/etudesenfrance/dyn/public/authentification/login.html",
+            },
+          ],
+          requirements: [
+            "NSC / Matric results",
+            "French language proficiency (for French-taught programs)",
+            "Motivation letter",
+          ],
+          notes: [
+            "Application process is complex — start early",
+            "Must apply through the Études en France portal",
+            "Many top programs are taught in French",
+            "Sciences Po and École Polytechnique have English-taught options",
+          ],
+          unis: ["École Polytechnique", "Sorbonne University", "Sciences Po"],
+          acceptance: {},
+          badge: "warn",
+          badgeText: "Complex process",
+        },
+        {
+          id: "canada",
+          flag: "🇨🇦",
+          name: "Canada",
+          deadline: "September",
+          portals: [
+            {
+              name: "OUAC (Ontario universities)",
+              url: "https://www.ouac.on.ca",
+            },
+          ],
+          requirements: [
+            "NSC / Matric results",
+            "Personal statement",
+            "Letters of recommendation",
+          ],
+          notes: [
+            "Highly competitive for international students",
+            "PAL (Post-Admission Letter) restrictions apply for some programs",
+            "OUAC portal covers Ontario universities; UBC and others apply directly",
+            "September deadline for most January intakes",
+          ],
+          unis: [
+            "University of Toronto",
+            "University of British Columbia (UBC)",
+            "McGill University",
+            "University of Alberta",
+          ],
+          acceptance: { UBC: "54%", McGill: "40%" },
+          badge: "warn",
+          badgeText: "Competitive",
+        },
+        {
+          id: "singapore",
+          flag: "🇸🇬",
+          name: "Singapore",
+          deadline: "October",
+          portals: [],
+          requirements: [
+            "NSC results (submit within 3 days of receiving)",
+            "Personal statement",
+            "IEB / SAT / ACT / AP exams (optional but strongly recommended)",
+          ],
+          notes: [
+            "Physics and Maths A's near-essential if applying for STEM",
+            "SAT/ACT/AP exams significantly boost chances — take them",
+            "NUS is ranked #11 globally",
+            "Apply directly through each university's website",
+          ],
+          unis: [
+            "NUS (National University of Singapore)",
+            "NTU (Nanyang Technological University)",
+            "SMU (Singapore Management University)",
+          ],
+          acceptance: { NUS: "5%", NTU: "25%" },
+          badge: "warn",
+          badgeText: "A's for STEM",
+        },
+        {
+          id: "japan",
+          flag: "🇯🇵",
+          name: "Japan",
+          deadline: "April",
+          portals: [
+            {
+              name: "TAO (The Admissions Office)",
+              url: "https://www.tao.ac.jp/",
+            },
+          ],
+          requirements: [
+            "NSC / Matric results",
+            "EJU exam (or strong SAT/ACT scores as alternative)",
+          ],
+          notes: [
+            "MEXT Scholarship available — apply through Embassy of Japan in Pretoria",
+            "EJU is Japan's entry exam for international students — plan ahead",
+            "Strong SAT/ACT can substitute EJU at some universities",
+            "Waseda and other private universities are often more accessible",
+          ],
+          unis: [
+            "University of Tokyo",
+            "Kyoto University",
+            "Osaka University",
+            "Tokyo Institute of Technology",
+            "Tohoku University",
+            "Nagoya University",
+            "Waseda University",
+          ],
+          acceptance: { "Univ. of Tokyo": ">15%", "Kyoto University": "11%" },
+          badge: "success",
+          badgeText: "MEXT scholarship",
+        },
+        {
+          id: "korea",
+          flag: "🇰🇷",
+          name: "South Korea",
+          deadline: "August",
+          portals: [
+            { name: "Study in Korea", url: "https://www.studyinkorea.go.kr" },
+          ],
+          requirements: [
+            "NSC / Matric results",
+            "Korean language proficiency (for Korean-taught programs)",
+            "Application via Study in Korea portal",
+          ],
+          notes: [
+            "GKS (Global Korea Scholarship) covers tuition + living costs",
+            "2 semesters: spring and fall intake",
+            "Many English-taught programs available at KAIST and POSTECH",
+            "SNU, KAIST, and POSTECH are world-class for STEM",
+          ],
+          unis: ["Seoul National University (SNU)", "KAIST", "POSTECH"],
+          acceptance: { "Seoul National Univ.": "10%", POSTECH: "10%" },
+          badge: "success",
+          badgeText: "GKS scholarship",
+        },
+        {
+          id: "netherlands",
+          flag: "🇳🇱",
+          name: "Netherlands",
+          deadline: "October",
+          portals: [{ name: "Studielink", url: "https://www.studielink.nl" }],
+          requirements: [
+            "NSC / Matric results",
+            "CV",
+            "Special Maths exam (Bossell-Bèta or OMPT)",
+            "English proficiency (IELTS / TOEFL)",
+          ],
+          notes: [
+            "Maths entrance exam required for many programs — prepare in advance",
+            "Majority of programs taught in English",
+            "Apply through Studielink for most Dutch universities",
+            "Delft is one of the best engineering universities in Europe",
+          ],
+          unis: [
+            "University of Amsterdam",
+            "Delft University of Technology",
+            "Leiden University",
+            "Utrecht University",
+            "Erasmus University Rotterdam",
+            "University of Groningen",
+          ],
+          acceptance: {},
+          badge: "warn",
+          badgeText: "Maths exam",
+        },
+        {
+          id: "ireland",
+          flag: "🇮🇪",
+          name: "Ireland",
+          deadline: "September",
+          portals: [{ name: "CAO", url: "https://www.cao.ie" }],
+          requirements: [
+            "NSC / Matric results",
+            "Personal statement",
+            "English proficiency proof",
+          ],
+          notes: [
+            "Discount available for early CAO applicants — apply before January 1",
+            "University websites often preferred over CAO for international students",
+            "English-speaking country — no language barrier",
+            "Strong tech and pharmaceutical industry links",
+          ],
+          unis: [
+            "Trinity College Dublin",
+            "University College Dublin",
+            "University of Galway",
+            "University College Cork",
+          ],
+          acceptance: {},
+          badge: "success",
+          badgeText: "Early discount",
+        },
+        {
+          id: "turkey",
+          flag: "🇹🇷",
+          name: "Türkiye",
+          deadline: "January",
+          portals: [
+            {
+              name: "Türkiye Bursları (Scholarships)",
+              url: "https://www.turkiyeburslari.gov.tr",
+            },
+          ],
+          requirements: [
+            "NSC / Matric results",
+            "TR-YÖS exam",
+            "Language proficiency (Turkish or English depending on program)",
+          ],
+          notes: [
+            "Türkiye Bursları offers full scholarship: tuition + accommodation + monthly stipend",
+            "Muslim-friendly campus environment and halal food widely available",
+            "Istanbul Technical University ranked in global top 100",
+            "TR-YÖS is Turkey's entry exam for international students",
+            "Scholarship application opens in January — very popular, apply early",
+          ],
+          unis: ["Istanbul Technical University"],
+          acceptance: { "Istanbul Technical Univ.": "30%" },
+          badge: "success",
+          badgeText: "Full scholarships",
+        },
+      ];
+
+      const TOP100 = [
+        {
+          rank: 1,
+          name: "Massachusetts Institute of Technology (MIT)",
+          country: "USA",
+          url: "https://www.mit.edu",
+          desc: [
+            "World's top-ranked science and engineering university",
+            "Located in Cambridge, Massachusetts",
+            "Known for STEM, entrepreneurship, and cutting-edge research",
+          ],
+        },
+        {
+          rank: 2,
+          name: "Harvard University",
+          country: "USA",
+          url: "https://www.harvard.edu",
+          desc: [
+            "Oldest university in the USA (founded 1636)",
+            "Renowned for law, medicine, business, and arts",
+            "14 schools and institutes across Boston/Cambridge",
+          ],
+        },
+        {
+          rank: 3,
+          name: "Stanford University",
+          country: "USA",
+          url: "https://www.stanford.edu",
+          desc: [
+            "Located in Silicon Valley — strong ties to tech industry",
+            "Top-ranked for engineering, computer science, and business",
+            "Home to the Stanford d.school (design thinking)",
+          ],
+        },
+        {
+          rank: 4,
+          name: "University of Oxford",
+          country: "UK",
+          url: "https://www.ox.ac.uk",
+          desc: [
+            "Oldest university in the English-speaking world",
+            "Collegiate system — you apply to a specific college",
+            "Renowned for humanities, law, medicine, and sciences",
+          ],
+        },
+        {
+          rank: 5,
+          name: "University of Cambridge",
+          country: "UK",
+          url: "https://www.cam.ac.uk",
+          desc: [
+            "World-leading research university founded in 1209",
+            "Collegiate structure similar to Oxford",
+            "Strong in mathematics, natural sciences, and engineering",
+          ],
+        },
+        {
+          rank: 6,
+          name: "California Institute of Technology (Caltech)",
+          country: "USA",
+          url: "https://www.caltech.edu",
+          desc: [
+            "Small, elite STEM-focused university (~2,300 students)",
+            "Manages NASA's Jet Propulsion Laboratory",
+            "Extremely high research output per student",
+          ],
+        },
+        {
+          rank: 7,
+          name: "ETH Zurich",
+          country: "Switzerland",
+          url: "https://ethz.ch",
+          desc: [
+            "Europe's top technical university",
+            "21 Nobel Prize winners associated with ETH",
+            "Strong in engineering, architecture, and natural sciences",
+          ],
+        },
+        {
+          rank: 8,
+          name: "Imperial College London",
+          country: "UK",
+          url: "https://www.imperial.ac.uk",
+          desc: [
+            "Specialist STEM university in central London",
+            "Top-ranked for engineering, medicine, and science",
+            "Strong industry partnerships and graduate employment",
+          ],
+        },
+        {
+          rank: 9,
+          name: "University of Chicago",
+          country: "USA",
+          url: "https://www.uchicago.edu",
+          desc: [
+            "Famous for economics — home of the 'Chicago School'",
+            "98 Nobel Prize winners affiliated",
+            "Rigorous core curriculum required for all undergrads",
+          ],
+        },
+        {
+          rank: 10,
+          name: "UCL (University College London)",
+          country: "UK",
+          url: "https://www.ucl.ac.uk",
+          desc: [
+            "Large research university in central London",
+            "Strong in engineering, architecture, law, and medicine",
+            "One of the most internationally diverse universities globally",
+          ],
+        },
+        {
+          rank: 11,
+          name: "National University of Singapore (NUS)",
+          country: "Singapore",
+          url: "https://www.nus.edu.sg",
+          desc: [
+            "Top university in Asia, ranked #11 globally",
+            "Strong in computing, engineering, business, and law",
+            "English-medium with a highly international campus",
+          ],
+        },
+        {
+          rank: 12,
+          name: "Princeton University",
+          country: "USA",
+          url: "https://www.princeton.edu",
+          desc: [
+            "Ivy League — known for strong undergraduate focus",
+            "No separate law or medical school (pure liberal arts + grad)",
+            "Exceptional financial aid — meets 100% of demonstrated need",
+          ],
+        },
+        {
+          rank: 13,
+          name: "Cornell University",
+          country: "USA",
+          url: "https://www.cornell.edu",
+          desc: [
+            "Ivy League university in Ithaca, New York",
+            "14 colleges — one of the most academically diverse Ivies",
+            "Top-ranked hotel management and veterinary programs",
+          ],
+        },
+        {
+          rank: 14,
+          name: "Yale University",
+          country: "USA",
+          url: "https://www.yale.edu",
+          desc: [
+            "Ivy League — known for drama, music, law, and medicine",
+            "Residential college system creates tight-knit communities",
+            "Yale Law School consistently ranked #1 in the USA",
+          ],
+        },
+        {
+          rank: 15,
+          name: "Columbia University",
+          country: "USA",
+          url: "https://www.columbia.edu",
+          desc: [
+            "Ivy League in New York City",
+            "Strong in journalism, law, international affairs, and film",
+            "Columbia Business School is among the world's best",
+          ],
+        },
+        {
+          rank: 16,
+          name: "University of Pennsylvania",
+          country: "USA",
+          url: "https://www.upenn.edu",
+          desc: [
+            "Ivy League in Philadelphia",
+            "Home to Wharton — the world's top undergraduate business school",
+            "Strong in medicine (Penn Medicine) and law",
+          ],
+        },
+        {
+          rank: 17,
+          name: "University of Edinburgh",
+          country: "UK",
+          url: "https://www.ed.ac.uk",
+          desc: [
+            "Scotland's leading research university, founded 1583",
+            "Strong in medicine, informatics, law, and arts",
+            "Beautiful historic campus in the heart of Edinburgh",
+          ],
+        },
+        {
+          rank: 18,
+          name: "University of Michigan",
+          country: "USA",
+          url: "https://umich.edu",
+          desc: [
+            "Large public research university (Ann Arbor)",
+            "Top-ranked for engineering, medicine, law, and business",
+            "Ross School of Business is consistently ranked globally",
+          ],
+        },
+        {
+          rank: 19,
+          name: "Johns Hopkins University",
+          country: "USA",
+          url: "https://www.jhu.edu",
+          desc: [
+            "World's first research university — pioneer of the model",
+            "#1 in the USA for biomedical research",
+            "Bloomberg School of Public Health is the largest in the world",
+          ],
+        },
+        {
+          rank: 20,
+          name: "Duke University",
+          country: "USA",
+          url: "https://www.duke.edu",
+          desc: [
+            "Located in Durham, North Carolina",
+            "Top-ranked for medicine, law, business, and policy",
+            "Known for strong undergraduate research opportunities",
+          ],
+        },
+        {
+          rank: 21,
+          name: "Nanyang Technological University (NTU)",
+          country: "Singapore",
+          url: "https://www.ntu.edu.sg",
+          desc: [
+            "Young university (1981) that rose rapidly in global rankings",
+            "Top-ranked for engineering, business, and education",
+            "Joint degree programs with top European and US universities",
+          ],
+        },
+        {
+          rank: 22,
+          name: "University of Tokyo",
+          country: "Japan",
+          url: "https://www.u-tokyo.ac.jp/en/",
+          desc: [
+            "Japan's most prestigious university, founded 1877",
+            "Acceptance rate under 15% — extremely competitive",
+            "Strong in science, engineering, medicine, and law",
+          ],
+        },
+        {
+          rank: 23,
+          name: "Peking University",
+          country: "China",
+          url: "https://english.pku.edu.cn",
+          desc: [
+            "China's top liberal arts and research university",
+            "Located in Beijing, founded 1898",
+            "Offers English-taught programs for international students",
+          ],
+        },
+        {
+          rank: 24,
+          name: "Tsinghua University",
+          country: "China",
+          url: "https://www.tsinghua.edu.cn/en/",
+          desc: [
+            "China's top engineering and technology university",
+            "Produced many of China's leading scientists and leaders",
+            "English-medium programs available for international students",
+          ],
+        },
+        {
+          rank: 25,
+          name: "University of Melbourne",
+          country: "Australia",
+          url: "https://www.unimelb.edu.au",
+          desc: [
+            "Australia's highest-ranked university",
+            "Uses a 'Melbourne Model' — broad undergrad + specialist postgrad",
+            "Strong in law, medicine, arts, and engineering",
+          ],
+        },
+        {
+          rank: 26,
+          name: "University of Toronto",
+          country: "Canada",
+          url: "https://www.utoronto.ca",
+          desc: [
+            "Canada's top research university",
+            "Tri-campus institution in one of the world's most diverse cities",
+            "Strong in medicine, engineering, AI research, and law",
+          ],
+        },
+        {
+          rank: 27,
+          name: "McGill University",
+          country: "Canada",
+          url: "https://www.mcgill.ca",
+          desc: [
+            "Located in Montreal — bilingual city (English & French)",
+            "Known as the 'Harvard of Canada'",
+            "Strong in medicine, law, music, and engineering",
+          ],
+        },
+        {
+          rank: 28,
+          name: "UC Berkeley",
+          country: "USA",
+          url: "https://www.berkeley.edu",
+          desc: [
+            "Top public university in the USA",
+            "Uses the UC Application (separate from Common App)",
+            "Strong in STEM, social sciences, law, and business",
+          ],
+        },
+        {
+          rank: 29,
+          name: "UCLA",
+          country: "USA",
+          url: "https://www.ucla.edu",
+          desc: [
+            "Located in Los Angeles — vibrant city and campus",
+            "Uses the UC Application alongside UC Berkeley",
+            "Top-ranked for film, medicine, engineering, and law",
+          ],
+        },
+        {
+          rank: 30,
+          name: "King's College London",
+          country: "UK",
+          url: "https://www.kcl.ac.uk",
+          desc: [
+            "Russell Group university in central London",
+            "Ranked among the top 10 globally for law and dentistry",
+            "4 Thames-side campuses in the heart of the city",
+          ],
+        },
+        {
+          rank: 31,
+          name: "University of Sydney",
+          country: "Australia",
+          url: "https://www.sydney.edu.au",
+          desc: [
+            "Australia's oldest university, founded 1850",
+            "Beautiful sandstone campus — one of the world's most scenic",
+            "Strong in law, medicine, business, and architecture",
+          ],
+        },
+        {
+          rank: 32,
+          name: "University of New South Wales (UNSW)",
+          country: "Australia",
+          url: "https://www.unsw.edu.au",
+          desc: [
+            "Located in Sydney — top for engineering and business",
+            "Acceptance rate around 50% — accessible for strong applicants",
+            "Strong industry connections in tech, finance, and law",
+          ],
+        },
+        {
+          rank: 33,
+          name: "University of Manchester",
+          country: "UK",
+          url: "https://www.manchester.ac.uk",
+          desc: [
+            "25 Nobel Prize winners affiliated",
+            "Russell Group — strong in science, business, and humanities",
+            "Located in one of the UK's most vibrant student cities",
+          ],
+        },
+        {
+          rank: 34,
+          name: "Technical University of Munich (TUM)",
+          country: "Germany",
+          url: "https://www.tum.de/en/",
+          desc: [
+            "Germany's #1 technical university",
+            "Low tuition fees — mostly semester admin fees only",
+            "Strong in engineering, computer science, and natural sciences",
+          ],
+        },
+        {
+          rank: 35,
+          name: "University of British Columbia (UBC)",
+          country: "Canada",
+          url: "https://www.ubc.ca",
+          desc: [
+            "Located in Vancouver — one of the world's most livable cities",
+            "54% acceptance rate — more accessible than many top schools",
+            "Strong in forestry, medicine, law, and environmental science",
+          ],
+        },
+        {
+          rank: 36,
+          name: "Seoul National University",
+          country: "South Korea",
+          url: "https://en.snu.ac.kr",
+          desc: [
+            "South Korea's most prestigious university",
+            "~10% acceptance rate — very competitive",
+            "Strong in engineering, medicine, law, and business",
+          ],
+        },
+        {
+          rank: 37,
+          name: "Kyoto University",
+          country: "Japan",
+          url: "https://www.kyoto-u.ac.jp/en",
+          desc: [
+            "Japan's second most prestigious university, founded 1897",
+            "18 Nobel Prize winners affiliated",
+            "Known for academic freedom and independent research culture",
+          ],
+        },
+        {
+          rank: 38,
+          name: "London School of Economics (LSE)",
+          country: "UK",
+          url: "https://www.lse.ac.uk",
+          desc: [
+            "Specialist social sciences university in London",
+            "World's top school for economics, politics, and law",
+            "18 past or present world leaders studied here",
+          ],
+        },
+        {
+          rank: 39,
+          name: "University of Amsterdam",
+          country: "Netherlands",
+          url: "https://www.uva.nl/en",
+          desc: [
+            "Netherlands' largest and most prestigious university",
+            "Most programs offered in English for international students",
+            "Located in one of Europe's most cosmopolitan cities",
+          ],
+        },
+        {
+          rank: 40,
+          name: "Delft University of Technology",
+          country: "Netherlands",
+          url: "https://www.tudelft.nl/en/",
+          desc: [
+            "Europe's top technical university for engineering",
+            "Strong in aerospace, architecture, civil, and systems engineering",
+            "Low fees compared to UK/USA alternatives",
+          ],
+        },
+        {
+          rank: 41,
+          name: "Australian National University (ANU)",
+          country: "Australia",
+          url: "https://www.anu.edu.au",
+          desc: [
+            "Located in Canberra — Australia's capital",
+            "National research university with strong government ties",
+            "Top for politics, law, Asian studies, and natural sciences",
+          ],
+        },
+        {
+          rank: 42,
+          name: "University of Zurich",
+          country: "Switzerland",
+          url: "https://www.uzh.ch/en.html",
+          desc: [
+            "Switzerland's largest university",
+            "Strong in medicine, science, economics, and law",
+            "Closely affiliated with ETH Zurich — shares facilities",
+          ],
+        },
+        {
+          rank: 43,
+          name: "LMU Munich",
+          country: "Germany",
+          url: "https://www.lmu.de/en/",
+          desc: [
+            "One of Germany's oldest and most prestigious universities",
+            "Strong in humanities, law, medicine, and sciences",
+            "Very low fees — mostly semester contribution (~€150)",
+          ],
+        },
+        {
+          rank: 44,
+          name: "Heidelberg University",
+          country: "Germany",
+          url: "https://www.uni-heidelberg.de/en",
+          desc: [
+            "Germany's oldest university, founded 1386",
+            "Strong in medicine, life sciences, and humanities",
+            "Picturesque campus in the Neckar Valley",
+          ],
+        },
+        {
+          rank: 45,
+          name: "University of Queensland",
+          country: "Australia",
+          url: "https://www.uq.edu.au",
+          desc: [
+            "Located in Brisbane — sunny subtropical city",
+            "Strong in mining engineering, medicine, and biotechnology",
+            "Large international student community",
+          ],
+        },
+        {
+          rank: 46,
+          name: "Monash University",
+          country: "Australia",
+          url: "https://www.monash.edu",
+          desc: [
+            "Largest university in Australia by student numbers",
+            "Campuses in Malaysia and South Africa too",
+            "Strong in pharmacy, engineering, law, and education",
+          ],
+        },
+        {
+          rank: 47,
+          name: "University of Auckland",
+          country: "New Zealand",
+          url: "https://www.auckland.ac.nz",
+          desc: [
+            "New Zealand's top-ranked university",
+            "Strong in engineering, law, business, and health sciences",
+            "English-speaking country — welcoming to South Africans",
+          ],
+        },
+        {
+          rank: 48,
+          name: "HKUST",
+          country: "Hong Kong",
+          url: "https://hkust.edu.hk",
+          desc: [
+            "Young, focused technical university founded 1991",
+            "Top-ranked in Asia for science, engineering, and business",
+            "English-medium institution",
+          ],
+        },
+        {
+          rank: 49,
+          name: "University of Hong Kong",
+          country: "Hong Kong",
+          url: "https://www.hku.hk",
+          desc: [
+            "Hong Kong's oldest university, founded 1911",
+            "Strong in medicine, law, and business",
+            "English is the primary language of instruction",
+          ],
+        },
+        {
+          rank: 50,
+          name: "Chinese University of Hong Kong",
+          country: "Hong Kong",
+          url: "https://www.cuhk.edu.hk/english/",
+          desc: [
+            "Bilingual university (English and Chinese)",
+            "Strong in medicine, business, and social sciences",
+            "College-based structure — each with its own community",
+          ],
+        },
+        {
+          rank: 51,
+          name: "Fudan University",
+          country: "China",
+          url: "https://www.fudan.edu.cn/en/",
+          desc: [
+            "One of China's most prestigious universities, in Shanghai",
+            "Offers English-taught programs for international students",
+            "Strong in social sciences, medicine, and humanities",
+          ],
+        },
+        {
+          rank: 52,
+          name: "Zhejiang University",
+          country: "China",
+          url: "https://www.zju.edu.cn/english/",
+          desc: [
+            "Consistently ranked among China's top 3 universities",
+            "Located in Hangzhou — close to tech hub Alibaba HQ",
+            "Strong in engineering, computer science, and agriculture",
+          ],
+        },
+        {
+          rank: 53,
+          name: "Shanghai Jiao Tong University",
+          country: "China",
+          url: "https://en.sjtu.edu.cn",
+          desc: [
+            "One of China's oldest and most selective universities",
+            "Creator of the Academic Ranking of World Universities (ARWU)",
+            "Strong in engineering, medicine, and management",
+          ],
+        },
+        {
+          rank: 54,
+          name: "KAIST",
+          country: "South Korea",
+          url: "https://www.kaist.ac.kr/en/",
+          desc: [
+            "South Korea's top science and technology university",
+            "All undergraduate programs taught in English",
+            "Strong in engineering, AI, and robotics — very research-intensive",
+          ],
+        },
+        {
+          rank: 55,
+          name: "POSTECH",
+          country: "South Korea",
+          url: "https://www.postech.ac.kr/eng/",
+          desc: [
+            "Small, elite technical university (only ~3,000 students)",
+            "Founded by POSCO steel company — strong industry funding",
+            "Top in South Korea for physics, chemistry, and engineering",
+          ],
+        },
+        {
+          rank: 56,
+          name: "University of Warwick",
+          country: "UK",
+          url: "https://warwick.ac.uk",
+          desc: [
+            "Russell Group — strong in economics, mathematics, and business",
+            "Warwick Business School consistently ranked among Europe's best",
+            "Located near Coventry — 45 mins from London by train",
+          ],
+        },
+        {
+          rank: 57,
+          name: "University of Glasgow",
+          country: "UK",
+          url: "https://www.gla.ac.uk",
+          desc: [
+            "Scotland's fourth oldest university, founded 1451",
+            "Strong in medicine, engineering, and law",
+            "Stunning Gothic campus architecture",
+          ],
+        },
+        {
+          rank: 58,
+          name: "University of Bristol",
+          country: "UK",
+          url: "https://www.bristol.ac.uk",
+          desc: [
+            "Russell Group — popular and competitive for international students",
+            "Strong in law, engineering, medicine, and veterinary science",
+            "Located in one of the UK's most student-friendly cities",
+          ],
+        },
+        {
+          rank: 59,
+          name: "University of Birmingham",
+          country: "UK",
+          url: "https://www.birmingham.ac.uk",
+          desc: [
+            "Russell Group — red-brick university founded 1900",
+            "Strong in medicine, business, law, and engineering",
+            "Large international student body",
+          ],
+        },
+        {
+          rank: 60,
+          name: "Durham University",
+          country: "UK",
+          url: "https://www.durham.ac.uk",
+          desc: [
+            "Collegiate university — third oldest in England",
+            "Strong in law, physics, theology, and business",
+            "High entry requirements — often compared to Oxford/Cambridge",
+          ],
+        },
+        {
+          rank: 61,
+          name: "Uppsala University",
+          country: "Sweden",
+          url: "https://www.uu.se/en",
+          desc: [
+            "Sweden's oldest university, founded 1477",
+            "Many programs offered in English",
+            "Strong in medicine, law, and social sciences",
+          ],
+        },
+        {
+          rank: 62,
+          name: "Lund University",
+          country: "Sweden",
+          url: "https://www.lunduniversity.lu.se",
+          desc: [
+            "Sweden's largest university by student numbers",
+            "Many English-taught bachelor's and master's programs",
+            "Strong in medicine, engineering, and social sciences",
+          ],
+        },
+        {
+          rank: 63,
+          name: "KTH Royal Institute of Technology",
+          country: "Sweden",
+          url: "https://www.kth.se/en",
+          desc: [
+            "Sweden's top technical university",
+            "Located in Stockholm",
+            "Programs available in English — strong in ICT and engineering",
+          ],
+        },
+        {
+          rank: 64,
+          name: "University of Copenhagen",
+          country: "Denmark",
+          url: "https://www.ku.dk/english/",
+          desc: [
+            "Denmark's top university and one of the oldest in Northern Europe",
+            "Strong in life sciences, medicine, and social sciences",
+            "Many English-taught programs available",
+          ],
+        },
+        {
+          rank: 65,
+          name: "Leiden University",
+          country: "Netherlands",
+          url: "https://www.universiteitleiden.nl/en",
+          desc: [
+            "Netherlands' oldest university, founded 1575",
+            "Strong in law, medicine, and social sciences",
+            "Many programs offered in English",
+          ],
+        },
+        {
+          rank: 66,
+          name: "Utrecht University",
+          country: "Netherlands",
+          url: "https://www.uu.nl/en",
+          desc: [
+            "Netherlands' largest university",
+            "Strong in life sciences, medicine, sustainability, and law",
+            "Many English-taught bachelor's programs available",
+          ],
+        },
+        {
+          rank: 67,
+          name: "Erasmus University Rotterdam",
+          country: "Netherlands",
+          url: "https://www.eur.nl/en",
+          desc: [
+            "Specialist focus on economics, business, law, and medicine",
+            "Rotterdam School of Management is globally ranked",
+            "Named after the philosopher Erasmus — strong liberal tradition",
+          ],
+        },
+        {
+          rank: 68,
+          name: "Ghent University",
+          country: "Belgium",
+          url: "https://www.ugent.be/en",
+          desc: [
+            "Belgium's top-ranked research university",
+            "Strong in biotechnology, veterinary sciences, and engineering",
+            "Growing number of English-taught master's programs",
+          ],
+        },
+        {
+          rank: 69,
+          name: "KU Leuven",
+          country: "Belgium",
+          url: "https://www.kuleuven.be/english/",
+          desc: [
+            "Belgium's largest and highest-ranked university",
+            "Founded in 1425 — one of Europe's oldest",
+            "Strong in theology, medicine, engineering, and law",
+          ],
+        },
+        {
+          rank: 70,
+          name: "University of Vienna",
+          country: "Austria",
+          url: "https://www.univie.ac.at/en/",
+          desc: [
+            "Austria's largest university and the oldest in German-speaking world",
+            "Strong in humanities, law, and social sciences",
+            "Very low tuition fees (€700–€1,500/year)",
+          ],
+        },
+        {
+          rank: 71,
+          name: "University of Helsinki",
+          country: "Finland",
+          url: "https://www.helsinki.fi/en",
+          desc: [
+            "Finland's largest and most research-intensive university",
+            "Strong in medicine, life sciences, and social sciences",
+            "English-taught programs available — no tuition fees for EU/EEA students",
+          ],
+        },
+        {
+          rank: 72,
+          name: "Aalto University",
+          country: "Finland",
+          url: "https://www.aalto.fi/en",
+          desc: [
+            "Finnish university merging technology, business, and arts",
+            "Strong in design, architecture, engineering, and economics",
+            "Deep connections to Finland's tech and startup ecosystem",
+          ],
+        },
+        {
+          rank: 73,
+          name: "EPFL",
+          country: "Switzerland",
+          url: "https://www.epfl.ch/en/",
+          desc: [
+            "Switzerland's elite technical university (French-speaking)",
+            "Located in Lausanne on Lake Geneva",
+            "Strong in computer science, engineering, and life sciences",
+          ],
+        },
+        {
+          rank: 74,
+          name: "École Polytechnique",
+          country: "France",
+          url: "https://www.polytechnique.edu/en",
+          desc: [
+            "France's most prestigious engineering Grande École",
+            "Military institution — graduates hold 'ingénieur polytechnicien' title",
+            "Many English-taught programs available for international students",
+          ],
+        },
+        {
+          rank: 75,
+          name: "Sorbonne University",
+          country: "France",
+          url: "https://www.sorbonne-universite.fr/en",
+          desc: [
+            "One of the oldest and most famous universities in the world",
+            "Strong in arts, humanities, science, and medicine",
+            "English-taught programs available; located in central Paris",
+          ],
+        },
+        {
+          rank: 76,
+          name: "Sciences Po",
+          country: "France",
+          url: "https://www.sciencespo.fr/en/",
+          desc: [
+            "Elite French university for political science and international affairs",
+            "Many programs fully taught in English",
+            "Strong focus on law, economics, and global affairs",
+          ],
+        },
+        {
+          rank: 77,
+          name: "University of Bologna",
+          country: "Italy",
+          url: "https://www.unibo.it/en/",
+          desc: [
+            "The world's oldest university, founded in 1088",
+            "Located in Bologna — Italy's 'city of students'",
+            "Many international-track programs taught in English",
+          ],
+        },
+        {
+          rank: 78,
+          name: "Sapienza University of Rome",
+          country: "Italy",
+          url: "https://www.uniroma1.it/en/",
+          desc: [
+            "Italy's largest university and one of the oldest",
+            "Located in Rome — strong in humanities, medicine, and law",
+            "Growing number of English-taught programs",
+          ],
+        },
+        {
+          rank: 79,
+          name: "Politecnico di Milano",
+          country: "Italy",
+          url: "https://www.polimi.it/en/",
+          desc: [
+            "Italy's top technical university — ranked highly for design and engineering",
+            "Many bachelor's and master's programs fully in English",
+            "Located in Milan — Italy's fashion and design capital",
+          ],
+        },
+        {
+          rank: 80,
+          name: "LMU Munich (University of Munich)",
+          country: "Germany",
+          url: "https://www.lmu.de/en/",
+          desc: [
+            "One of Germany's most prestigious comprehensive universities",
+            "42 Nobel Prize winners affiliated",
+            "Strong in medicine, law, humanities, and natural sciences",
+          ],
+        },
+        {
+          rank: 81,
+          name: "Humboldt University of Berlin",
+          country: "Germany",
+          url: "https://www.hu-berlin.de/en",
+          desc: [
+            "Germany's oldest university in Berlin, founded 1810",
+            "Invented the 'research university' model — hugely influential",
+            "Strong in humanities, law, social sciences, and natural sciences",
+          ],
+        },
+        {
+          rank: 82,
+          name: "Freie Universität Berlin",
+          country: "Germany",
+          url: "https://www.fu-berlin.de/en/",
+          desc: [
+            "Major research university in Berlin — founded during Cold War era",
+            "Strong in social sciences, humanities, and veterinary medicine",
+            "Many English-taught courses and programs",
+          ],
+        },
+        {
+          rank: 83,
+          name: "Charité – Universitätsmedizin Berlin",
+          country: "Germany",
+          url: "https://www.charite.de/en/",
+          desc: [
+            "One of Europe's largest and most respected medical schools",
+            "Joint institution of Humboldt University and Freie Universität Berlin",
+            "Training ground for over half of Germany's medical professors",
+          ],
+        },
+        {
+          rank: 84,
+          name: "Universidad de Buenos Aires",
+          country: "Argentina",
+          url: "https://www.uba.ar",
+          desc: [
+            "Latin America's top-ranked university",
+            "Free public education — no tuition fees",
+            "Strong in medicine, law, social sciences, and architecture",
+          ],
+        },
+        {
+          rank: 85,
+          name: "University of Cape Town",
+          country: "South Africa",
+          url: "https://www.uct.ac.za",
+          desc: [
+            "Africa's top-ranked university — in your home country",
+            "Strong in medicine, law, commerce, and engineering",
+            "English-medium; located on the slopes of Devil's Peak, Cape Town",
+          ],
+        },
+        {
+          rank: 86,
+          name: "Cairo University",
+          country: "Egypt",
+          url: "https://cu.edu.eg/en",
+          desc: [
+            "Egypt's most prestigious university, founded 1908",
+            "Strong in medicine, law, engineering, and agriculture",
+            "Arabic is primary language; English programs available",
+          ],
+        },
+        {
+          rank: 87,
+          name: "King Abdulaziz University",
+          country: "Saudi Arabia",
+          url: "https://www.kau.edu.sa/home_english.aspx",
+          desc: [
+            "Saudi Arabia's largest university, located in Jeddah",
+            "Strong in science, engineering, and Islamic studies",
+            "Full scholarships available for international Muslim students",
+          ],
+        },
+        {
+          rank: 88,
+          name: "KAUST",
+          country: "Saudi Arabia",
+          url: "https://www.kaust.edu.sa/en",
+          desc: [
+            "Graduate-only research university in Thuwal",
+            "Full scholarships covering tuition, housing, and stipend",
+            "Strong focus on science, engineering, and technology",
+          ],
+        },
+        {
+          rank: 89,
+          name: "University of Osaka",
+          country: "Japan",
+          url: "https://www.osaka-u.ac.jp/en",
+          desc: [
+            "One of Japan's Imperial Universities — prestigious and research-intensive",
+            "Strong in medicine, science, and engineering",
+            "English-taught programs available for international students",
+          ],
+        },
+        {
+          rank: 90,
+          name: "Tokyo Institute of Technology",
+          country: "Japan",
+          url: "https://www.titech.ac.jp/english/",
+          desc: [
+            "Japan's top specialist science and engineering university",
+            "Merging with Tokyo Medical and Dental University in 2024",
+            "Strong in materials science, computing, and physics",
+          ],
+        },
+        {
+          rank: 91,
+          name: "Tohoku University",
+          country: "Japan",
+          url: "https://www.tohoku.ac.jp/en/",
+          desc: [
+            "First Japanese university to admit female students (1913)",
+            "Strong in materials science, physics, and engineering",
+            "MEXT scholarship available — very international-friendly",
+          ],
+        },
+        {
+          rank: 92,
+          name: "Nagoya University",
+          country: "Japan",
+          url: "https://en.nagoya-u.ac.jp",
+          desc: [
+            "6 Nobel Prize winners among faculty/alumni",
+            "Strong in automotive engineering — partnered with Toyota",
+            "English-taught programs available; MEXT scholarship eligible",
+          ],
+        },
+        {
+          rank: 93,
+          name: "IIT Bombay",
+          country: "India",
+          url: "https://www.iitb.ac.in",
+          desc: [
+            "India's most international IIT campus",
+            "Strong in engineering, computer science, and design",
+            "Extremely competitive — but open to international applicants",
+          ],
+        },
+        {
+          rank: 94,
+          name: "Indian Institute of Science (IISc)",
+          country: "India",
+          url: "https://www.iisc.ac.in",
+          desc: [
+            "India's top research university — graduate and postgraduate focus",
+            "Strong in engineering, computing, and natural sciences",
+            "Located in Bangalore — India's tech hub",
+          ],
+        },
+        {
+          rank: 95,
+          name: "Istanbul Technical University",
+          country: "Türkiye",
+          url: "https://www.itu.edu.tr/en",
+          desc: [
+            "Turkey's top technical university, founded 1773",
+            "Full scholarships available via Türkiye Bursları",
+            "Strong in engineering, architecture, and maritime studies",
+          ],
+        },
+        {
+          rank: 96,
+          name: "Northwestern University",
+          country: "USA",
+          url: "https://www.northwestern.edu",
+          desc: [
+            "Located in Evanston, Illinois (near Chicago)",
+            "Strong in journalism, medicine, law, engineering, and music",
+            "Uses Common App — known for quarter system (not semesters)",
+          ],
+        },
+        {
+          rank: 97,
+          name: "Carnegie Mellon University",
+          country: "USA",
+          url: "https://www.cmu.edu",
+          desc: [
+            "Top in the world for computer science and AI",
+            "Located in Pittsburgh, Pennsylvania",
+            "Strong in engineering, drama, fine arts, and public policy",
+          ],
+        },
+        {
+          rank: 98,
+          name: "New York University (NYU)",
+          country: "USA",
+          url: "https://www.nyu.edu",
+          desc: [
+            "Located in Greenwich Village, Manhattan — no traditional campus",
+            "Global university with campuses in Abu Dhabi and Shanghai",
+            "Strong in business, law, arts, and media",
+          ],
+        },
+        {
+          rank: 99,
+          name: "Waseda University",
+          country: "Japan",
+          url: "https://www.waseda.jp/top/en",
+          desc: [
+            "Japan's most internationally accessible private university",
+            "Many fully English-taught programs for international students",
+            "Located in Tokyo — strong in politics, law, and social sciences",
+          ],
+        },
+        {
+          rank: 100,
+          name: "University of Groningen",
+          country: "Netherlands",
+          url: "https://www.rug.nl/en/",
+          desc: [
+            "One of the oldest Dutch universities, founded 1614",
+            "Many English-taught bachelor's programs",
+            "Strong in medicine, law, and behavioural sciences",
+          ],
+        },
+      ];
+
+      const CHECKLIST = {
+        "Always required": [
+          {
+            id: "nsc",
+            text: "NSC / Matric results (Grade 9–12, certified copies)",
+          },
+          { id: "cert", text: "Certified copy of ID / passport" },
+          { id: "trans", text: "Official academic transcripts" },
+        ],
+        "Usually required": [
+          { id: "ps", text: "Personal statement / motivation letter" },
+          { id: "lor1", text: "Letter of recommendation — Teacher 1" },
+          { id: "lor2", text: "Letter of recommendation — Teacher 2" },
+          { id: "lor3", text: "Counselor / principal reference letter" },
+          { id: "cv", text: "CV / resume (especially Germany, Netherlands)" },
+          {
+            id: "eng",
+            text: "English proficiency proof (IELTS / TOEFL if required)",
+          },
+        ],
+        "Country-specific": [
+          { id: "sat", text: "SAT / ACT scores (USA, Singapore)" },
+          { id: "eju", text: "EJU exam results (Japan)" },
+          { id: "yos", text: "TR-YÖS exam results (Türkiye)" },
+          {
+            id: "mathexam",
+            text: "Maths entrance exam (Netherlands: Bossell-Bèta / OMPT)",
+          },
+          { id: "ethexam", text: "ETH Zurich entrance exam (Switzerland)" },
+          {
+            id: "sup",
+            text: "Supplemental / university-specific essays (USA)",
+          },
+        ],
+        "Optional but recommended": [
+          {
+            id: "ap",
+            text: "AP exam scores (Singapore, USA — significantly boosts chances)",
+          },
+          {
+            id: "port",
+            text: "Portfolio (for arts, design, or architecture programs)",
+          },
+          { id: "ib", text: "IB diploma / predicted grades letter" },
+        ],
+      };
+
+      let activeCountry = null;
+      let activeFilter = "All";
+      let checks = {};
+
+      function showTab(tab, btn) {
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        document.getElementById("page-" + tab).classList.add("active");
+        document
+          .querySelectorAll(".tab")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+      }
+
+      function enterApp() {
+        document.getElementById("welcome-screen").style.display = "none";
+        document.getElementById("main-app").style.display = "block";
+        showTab("countries", document.querySelector(".tab"));
+      }
+
+      function renderCountries(list) {
+        const grid = document.getElementById("country-grid");
+        if (!list.length) {
+          grid.innerHTML =
+            '<div class="no-results">No countries match your search.</div>';
+          return;
+        }
+        grid.innerHTML = list
+          .map(
+            (c) => `
+    <div class="country-card${activeCountry === c.id ? " active" : ""}" onclick="selectCountry('${c.id}')">
+      <div class="flag">${c.flag}</div>
+      <h3>${c.name}</h3>
+      <div class="deadline"><i class="ti ti-calendar" aria-hidden="true" style="font-size:13px"></i>${c.deadline}</div>
+      <div class="badge ${c.badge}">${c.badgeText}</div>
+    </div>
+  `,
+          )
+          .join("");
+      }
+
+      function selectCountry(id) {
+        activeCountry = activeCountry === id ? null : id;
+        renderCountries(COUNTRIES);
+        const detail = document.getElementById("country-detail");
+        if (!activeCountry) {
+          detail.innerHTML = "";
+          return;
+        }
+        const c = COUNTRIES.find((x) => x.id === id);
+        const portalsHTML = c.portals.length
+          ? c.portals
+              .map(
+                (p) =>
+                  `<a href="${p.url}" class="portal-link" target="_blank" rel="noopener"><i class="ti ti-external-link" aria-hidden="true" style="font-size:14px"></i>${p.name}</a>`,
+              )
+              .join("")
+          : `<span style="font-size:13px;color:var(--text-secondary)">Apply directly via each university's website</span>`;
+
+        const accHTML = Object.entries(c.acceptance).length
+          ? `<div class="section-label">Estimated acceptance rates (2027 projection)</div>
+       <div class="acc-list">${Object.entries(c.acceptance)
+         .map(
+           ([u, r]) =>
+             `<div class="acc-item"><span>${u}</span><span class="rate">${r}</span></div>`,
+         )
+         .join("")}</div>`
+          : "";
+
+        detail.innerHTML = `
+    <div class="detail-panel">
+      <div class="detail-header">
+        <h2>${c.flag} ${c.name} <span class="sub">— ${c.deadline}</span></h2>
+        <button class="close-btn" onclick="selectCountry('${c.id}')"><i class="ti ti-x" aria-hidden="true" style="font-size:13px"></i>Close</button>
+      </div>
+      <div class="section-label">Application portals</div>
+      <div style="margin-bottom:1rem">${portalsHTML}</div>
+      <div class="detail-grid">
+        <div>
+          <div class="section-label">Requirements</div>
+          <ul class="req-list">${c.requirements.map((r) => `<li>${r}</li>`).join("")}</ul>
+        </div>
+        <div>
+          <div class="section-label">Key notes</div>
+          <ul class="req-list">${c.notes.map((n) => `<li>${n}</li>`).join("")}</ul>
+        </div>
+      </div>
+      ${
+        c.unis.length
+          ? `
+        <div class="section-label">Notable universities</div>
+        <div class="tags-wrap">${c.unis.map((u) => `<span class="tag">${u}</span>`).join("")}</div>
+      `
+          : ""
+      }
+      ${accHTML}
+    </div>
+  `;
+        detail.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      function filterCountries(q) {
+        const filtered = COUNTRIES.filter((c) =>
+          c.name.toLowerCase().includes(q.toLowerCase()),
+        );
+        renderCountries(filtered);
+      }
+
+      let openUni = null;
+
+      function renderUnis(list) {
+        const el = document.getElementById("uni-list");
+        if (!list.length) {
+          el.innerHTML =
+            '<div class="no-results">No universities match your search.</div>';
+          return;
+        }
+        el.innerHTML = list
+          .map(
+            (u) => `
+    <div class="uni-item${openUni === u.rank ? " open" : ""}" id="uni-${u.rank}" onclick="toggleUni(${u.rank})">
+      <div class="uni-item-header">
+        <span class="rank">${u.rank}</span>
+        <span class="name">${u.name}</span>
+        <span class="ctag">${u.country}</span>
+        <i class="ti ti-chevron-down chevron" aria-hidden="true"></i>
+      </div>
+      <div class="uni-expand">
+        <ul>${u.desc.map((d) => `<li>${d}</li>`).join("")}</ul>
+        <a href="${u.url}" class="uni-site-link" target="_blank" rel="noopener">
+          <i class="ti ti-external-link" aria-hidden="true" style="font-size:13px"></i>Visit website
+        </a>
+      </div>
+    </div>
+  `,
+          )
+          .join("");
+      }
+
+      function toggleUni(rank) {
+        openUni = openUni === rank ? null : rank;
+        filterUnis();
+      }
+
+      function filterUnis() {
+        const q = document.getElementById("uni-search").value.toLowerCase();
+        const base =
+          activeFilter === "All"
+            ? TOP100
+            : TOP100.filter((u) => u.country === activeFilter);
+        renderUnis(
+          base.filter(
+            (u) =>
+              u.name.toLowerCase().includes(q) ||
+              u.country.toLowerCase().includes(q),
+          ),
+        );
+      }
+
+      function setFilter(country, btn) {
+        activeFilter = country;
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        filterUnis();
+      }
+
+      function renderFilters() {
+        const countries = [
+          "All",
+          "USA",
+          "UK",
+          "Germany",
+          "Japan",
+          "Australia",
+          "Netherlands",
+          "China",
+          "Canada",
+          "Switzerland",
+          "France",
+          "South Korea",
+          "Singapore",
+          "Türkiye",
+          "South Africa",
+        ];
+        document.getElementById("filter-row").innerHTML = countries
+          .map(
+            (c) =>
+              `<button class="filter-btn${c === "All" ? " active" : ""}" onclick="setFilter('${c}', this)">${c}</button>`,
+          )
+          .join("");
+      }
+
+      function renderChecklist() {
+        let html = "";
+        const allItems = Object.values(CHECKLIST).flat();
+        const done = allItems.filter((i) => checks[i.id]).length;
+        const total = allItems.length;
+        document.getElementById("progress-count").textContent =
+          `${done} of ${total} completed`;
+        document.getElementById("pbar").style.width = total
+          ? Math.round((done / total) * 100) + "%"
+          : "0%";
+
+        for (const [section, items] of Object.entries(CHECKLIST)) {
+          html += `<div class="section-label">${section}</div><div class="checklist">`;
+          html += items
+            .map(
+              (item) => `
+      <div class="check-item${checks[item.id] ? " done" : ""}" id="row-${item.id}">
+        <input type="checkbox" id="${item.id}" ${checks[item.id] ? "checked" : ""} onchange="toggleCheck('${item.id}')">
+        <label for="${item.id}">${item.text}</label>
+      </div>
+    `,
+            )
+            .join("");
+          html += "</div>";
+        }
+        document.getElementById("checklist-content").innerHTML = html;
+      }
+
+      function toggleCheck(id) {
+        checks[id] = !checks[id];
+        renderChecklist();
+      }
+
+      renderCountries(COUNTRIES);
+      renderFilters();
+      renderUnis(TOP100);
+      renderChecklist();
+    </script>
+  </body>
+</html>
