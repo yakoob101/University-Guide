@@ -103,6 +103,16 @@
         flex: 1;
       }
 
+      .live-clock {
+        padding: 0 14px;
+        color: var(--text-secondary);
+        font-size: 12px;
+        line-height: 56px;
+        white-space: nowrap;
+        border-left: 1px solid var(--border);
+        margin-left: auto;
+      }
+
       .tab {
         padding: 0 16px;
         height: 56px;
@@ -142,12 +152,15 @@
         overflow: hidden;
         visibility: hidden;
         pointer-events: none;
-        transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), max-height 0.45s ease;
+        transition:
+          opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+          transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+          max-height 0.45s ease;
       }
       .page.active {
         opacity: 1;
         transform: translateY(0);
-        max-height: 3000px;
+        max-height: 9999px;
         visibility: visible;
         pointer-events: auto;
       }
@@ -190,18 +203,24 @@
       }
 
       .country-card {
-        background: var(--bg);
-        border: 0.5px solid var(--border);
-        border-radius: var(--radius-lg);
+        position: relative;
+        background-color: rgba(57, 57, 57, 0.074);
+        border: 1px solid rgba(255, 255, 255, 0.222);
+        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(20px);
+        border-radius: 0.7rem;
         padding: 1rem 1.25rem;
         cursor: pointer;
-        transition:
-          border-color 0.15s,
-          transform 0.1s;
+        transition: all ease 0.3s;
         user-select: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
       }
       .country-card:hover {
-        border-color: var(--border-hover);
+        box-shadow: 0px 0px 20px 1px rgba(255, 187, 118, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.454);
         transform: translateY(-1px);
       }
       .country-card.active {
@@ -209,11 +228,11 @@
       }
 
       .country-card .flag {
-        font-size: 28px;
+        font-size: 20px;
         margin-bottom: 10px;
       }
       .country-card h3 {
-        font-size: 14px;
+        font-size: 20px;
         font-weight: 500;
         color: var(--text);
       }
@@ -335,6 +354,32 @@
         }
         .topbar {
           padding: 0 1rem;
+        }
+        .topbar-inner {
+          flex-wrap: wrap;
+          gap: 1rem;
+          align-items: flex-end;
+        }
+        .tabs {
+          width: 100%;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        .tabs::-webkit-scrollbar {
+          display: none;
+        }
+        .tab {
+          flex: 0 0 auto;
+          min-width: 110px;
+        }
+        .live-clock {
+          width: 100%;
+          margin-left: 0;
+          border-left: none;
+          border-top: 0.5px solid var(--border);
+          padding: 0.75rem 0 0.75rem 0;
+          text-align: center;
+          line-height: 1.4;
         }
         .stats-row {
           grid-template-columns: 1fr 1fr;
@@ -641,28 +686,88 @@
         margin-top: 2px;
       }
       .welcome-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 14px 32px;
-        background: var(--blue-mid);
+        position: relative;
+        padding: 16px 30px;
+        font-size: 17px;
         color: #fff;
         border: none;
-        border-radius: var(--radius-lg);
-        font-size: 15px;
-        font-weight: 500;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        backdrop-filter: blur(15px);
         cursor: pointer;
-        transition:
-          opacity 0.15s,
-          transform 0.1s;
+        box-shadow:
+          0 10px 20px rgba(0, 0, 0, 0.1),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: Arial, sans-serif;
+        letter-spacing: 0.5px;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         animation: floatIn 0.8s 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
       }
+      .welcome-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        transition: 0.6s;
+      }
+      .welcome-btn::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle at center,
+          rgba(255, 255, 255, 0.1) 0%,
+          transparent 70%
+        );
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
       .welcome-btn:hover {
-        opacity: 0.88;
-        transform: translateY(-1px);
+        transform: translateY(-3px) scale(1.02);
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow:
+          0 15px 30px rgba(0, 0, 0, 0.15),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+        letter-spacing: 1.5px;
+      }
+      .welcome-btn:hover::before {
+        left: 100%;
+      }
+      .welcome-btn:hover::after {
+        opacity: 1;
       }
       .welcome-btn:active {
-        transform: scale(0.98);
+        transform: translateY(1px) scale(0.98);
+        box-shadow:
+          0 5px 15px rgba(0, 0, 0, 0.1),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.2);
+      }
+      .welcome-btn span {
+        position: relative;
+        z-index: 1;
+        font-weight: 500;
+      }
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
       }
       .welcome-features {
         display: grid;
@@ -740,10 +845,59 @@
         font-weight: 500;
       }
 
-      .uni-item {
+      .back-to-top {
+        position: fixed;
+        right: 20px;
+        bottom: 24px;
+        z-index: 200;
+        width: 44px;
+        height: 44px;
+        border: none;
+        border-radius: 50%;
+        background: var(--blue-mid);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        box-shadow: 0 10px 30px rgba(24, 95, 165, 0.2);
         cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(12px);
+        transition:
+          opacity 0.25s ease,
+          transform 0.25s ease,
+          visibility 0.25s ease;
+      }
+      .back-to-top.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+      .back-to-top:hover {
+        background: var(--blue-dark);
+      }
+
+      .uni-item {
+        position: relative;
+        cursor: pointer;
+        display: flex;
         flex-direction: column;
         align-items: stretch;
+        background-color: rgba(38, 38, 38, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(12px);
+        border-radius: 0.7rem;
+        padding: 9px 14px;
+        transition:
+          border-color 0.25s ease,
+          background-color 0.25s ease,
+          box-shadow 0.25s ease,
+          transform 0.2s ease;
+      }
+      .uni-item:hover {
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+        transform: translateY(-2px);
       }
       .uni-item-header {
         display: flex;
@@ -753,15 +907,30 @@
       }
       .uni-item.open {
         border-color: var(--blue-mid);
+        background: rgba(24, 95, 165, 0.04);
       }
       .uni-expand {
-        display: none;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        visibility: hidden;
+        margin-top: 0;
+        padding-top: 0;
+        border-top: 0 solid var(--border);
+        transition:
+          max-height 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+          opacity 0.45s ease,
+          margin-top 0.45s ease,
+          padding-top 0.45s ease,
+          border-top-color 0.45s ease;
+      }
+      .uni-item.open .uni-expand {
+        max-height: 800px;
+        opacity: 1;
+        visibility: visible;
         margin-top: 10px;
         padding-top: 10px;
         border-top: 0.5px solid var(--border);
-      }
-      .uni-item.open .uni-expand {
-        display: block;
       }
       .uni-expand ul {
         list-style: none;
@@ -798,6 +967,25 @@
       .uni-site-link:hover {
         opacity: 0.8;
       }
+      .uni-country-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 12px;
+        background: var(--green-light);
+        color: var(--green-dark);
+        border-radius: var(--radius-md);
+        font-size: 12px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.15s;
+        margin-left: 6px;
+        font-family: inherit;
+      }
+      .uni-country-link:hover {
+        opacity: 0.8;
+      }
       .chevron {
         font-size: 14px;
         color: var(--text-secondary);
@@ -824,7 +1012,7 @@
       </p>
       <div class="welcome-stats">
         <div class="welcome-stat">
-          <div class="num">13</div>
+          <div class="num">32</div>
           <div class="lbl">countries covered</div>
         </div>
         <div class="welcome-stat">
@@ -838,7 +1026,7 @@
       </div>
       <button class="welcome-btn" onclick="enterApp()">
         <i class="ti ti-arrow-right" aria-hidden="true"></i>
-        Get started
+        <span>Get started</span>
       </button>
       <div class="welcome-features">
         <div class="welcome-feature">
@@ -846,7 +1034,7 @@
             <i class="ti ti-map-pin" aria-hidden="true"></i>
           </div>
           <h4>Country guide</h4>
-          <p>Portals, deadlines &amp; requirements for 13 countries</p>
+          <p>Portals, deadlines &amp; requirements for 32 countries</p>
         </div>
         <div class="welcome-feature">
           <div class="ficon">
@@ -873,7 +1061,7 @@
       <nav class="topbar">
         <div class="topbar-inner">
           <div class="brand">
-            University Guide <span>for South African applicants</span>
+            University Guide <span>for International Applicants</span>
           </div>
           <div class="tabs">
             <button class="tab active" onclick="showTab('countries', this)">
@@ -886,6 +1074,7 @@
               Checklist
             </button>
           </div>
+          <div class="live-clock" id="liveClock">Loading time...</div>
         </div>
       </nav>
 
@@ -954,6 +1143,15 @@
       </footer>
     </div>
     <!-- end #main-app -->
+
+    <button
+      id="backToTop"
+      class="back-to-top"
+      onclick="scrollToTop()"
+      aria-label="Back to top"
+    >
+      <i class="ti ti-arrow-up" aria-hidden="true" style="font-size: 16px"></i>
+    </button>
 
     <script>
       const COUNTRIES = [
@@ -1381,6 +1579,784 @@
           acceptance: { "Istanbul Technical Univ.": "30%" },
           badge: "success",
           badgeText: "Full scholarships",
+        },
+        {
+          id: "southafrica",
+          flag: "🇿🇦",
+          name: "South Africa",
+          deadline: "April – September",
+          portals: [],
+          requirements: [
+            "Matriculation Exemption Certificate (USAf Certificate)",
+            "Valid South African Study Visa",
+            "Registered South African Medical Aid",
+            "Proof of Financial Means",
+            "English Language Proficiency (if applicable)",
+            "National Benchmark Tests (NBTs) — required by some programs",
+          ],
+          notes: [
+            "Apply directly through each university's own website — no central portal",
+            "UCT is Africa's top-ranked university (#85 globally)",
+            "NBTs are required by UCT, Wits, and several other universities",
+            "English is the primary medium of instruction at all top universities",
+            "International students must obtain a study visa before registration",
+            "Medical aid registration is compulsory for international students",
+          ],
+          unis: [
+            "University of Cape Town (UCT)",
+            "University of the Witwatersrand (Wits)",
+            "University of Johannesburg (UJ)",
+            "Stellenbosch University (SU)",
+            "University of Pretoria (UP)",
+          ],
+          acceptance: {
+            UCT: "30–35%",
+            Wits: "34%",
+            UJ: "15–20%",
+            Stellenbosch: "45–55%",
+            "Univ. of Pretoria": "40–50%",
+          },
+          badge: "info",
+          badgeText: "Direct apply",
+        },
+        {
+          id: "china",
+          flag: "🇨🇳",
+          name: "China",
+          deadline: "March – May",
+          portals: [],
+          requirements: [
+            "High School Graduation Diploma",
+            "HSK Certificate (Chinese proficiency) — or TOEFL/IELTS for English-taught degrees",
+            "Foreigner Physical Examination Form (official medical clearance)",
+            "Non-Criminal Record Certificate",
+            "X1 (long-term) or X2 (short-term) Student Visa",
+            "Financial Guarantee Statement",
+          ],
+          notes: [
+            "Apply directly through each university's website — no central portal",
+            "Tsinghua and Peking University are among the most competitive in the world (<2% for internationals)",
+            "Many English-taught programs available — HSK not required for those",
+            "CSC Scholarship (Chinese Government Scholarship) covers tuition + accommodation + stipend",
+            "Medical clearance form must be completed at a certified hospital before arrival",
+            "Strong in engineering, computer science, medicine, and sciences",
+          ],
+          unis: [
+            "Tsinghua University",
+            "Peking University",
+            "Zhejiang University",
+            "Shanghai Jiao Tong University",
+            "Fudan University",
+          ],
+          acceptance: {
+            Tsinghua: "<2%",
+            "Peking Univ.": "<2%",
+            "Zhejiang Univ.": "5–10%",
+            "Shanghai Jiao Tong": "5–8%",
+            Fudan: "5–10%",
+          },
+          badge: "warn",
+          badgeText: "HSK / CSC",
+        },
+        {
+          id: "italy",
+          flag: "🇮🇹",
+          name: "Italy",
+          deadline: "February – April",
+          portals: [
+            {
+              name: "Universitaly (pre-enrolment)",
+              url: "https://www.universitaly.it/index.php/",
+            },
+          ],
+          requirements: [
+            "Declaration of Value (Dichiarazione di Valore) or CIMEA Statement of Comparability",
+            "Pre-enrolment via the Universitaly portal",
+            "Entry exam scores (TOLC, IMAT, or university-specific tests)",
+            "Italian National Student Visa (Type D)",
+            "Italian language proficiency B2 level — or English test scores for English programs",
+            "Proof of minimum financial support (€6,000+ per year)",
+          ],
+          notes: [
+            "University of Bologna is the world's oldest university (founded 1088)",
+            "Universitaly pre-enrolment is mandatory before applying — do this first",
+            "Many bachelor's and master's programs fully taught in English (especially Politecnico di Milano)",
+            "IMAT is the entry exam specifically for Medicine in English",
+            "Tuition fees are income-based and often very low for international students",
+            "Politecnico di Milano is world-class for engineering and design",
+          ],
+          unis: [
+            "University of Bologna",
+            "Sapienza University of Rome",
+            "University of Milan",
+            "University of Padua",
+            "Politecnico di Milano",
+          ],
+          acceptance: {
+            Bologna: "50–55%",
+            Sapienza: "55%",
+            "Univ. of Milan": "21%",
+            "Univ. of Padua": "45%",
+            "Politecnico di Milano": "50%",
+          },
+          badge: "info",
+          badgeText: "Universitaly",
+        },
+        {
+          id: "norway",
+          flag: "🇳🇴",
+          name: "Norway",
+          deadline: "December – March",
+          portals: [],
+          requirements: [
+            "GSU-list Higher Education Entrance Qualification (country-specific check required)",
+            "Norwegian Language Proficiency (Bergenstesten/Vox) for Norwegian-taught programs",
+            "English proficiency (TOEFL or IELTS) for English-taught programs",
+            "Norwegian Residence Permit for Students",
+            "Proof of financial subsistence deposited in a Norwegian bank account (~NOK 151,692/year)",
+          ],
+          notes: [
+            "Public universities charge NO tuition fees — even for international students",
+            "Apply directly through each university's website — no central portal",
+            "Most master's programs are available in English; bachelor's are mostly in Norwegian",
+            "University of Oslo and NTNU are the most internationally accessible",
+            "Residence permit must be applied for before arrival — allow 1–3 months processing",
+            "Cost of living is high — the financial proof requirement reflects this",
+          ],
+          unis: [
+            "University of Oslo",
+            "University of Bergen",
+            "Norwegian University of Science and Technology (NTNU)",
+            "UiT – The Arctic University of Norway",
+            "Norwegian University of Life Sciences (NMBU)",
+          ],
+          acceptance: {
+            "Univ. of Oslo": "10–15%",
+            "Univ. of Bergen": "20%",
+            NTNU: "20–25%",
+            "UiT Arctic Univ.": "45%",
+            NMBU: "35%",
+          },
+          badge: "success",
+          badgeText: "No tuition fees",
+        },
+        {
+          id: "saudiarabia",
+          flag: "🇸🇦",
+          name: "Saudi Arabia",
+          deadline: "Varies by university",
+          portals: [
+            {
+              name: "Study in Saudi Platform",
+              url: "https://studyinsaudi.moe.gov.sa/",
+            },
+          ],
+          requirements: [
+            "Attested High School Diploma (legalised by the Saudi Embassy)",
+            "Government Eligibility Approval via the 'Study in Saudi' central portal",
+            "Medical Clearance Certificate (free of contagious diseases)",
+            "Police Clearance Certificate",
+            "Valid Passport (minimum 6 months validity)",
+            "Arabic or English Language Proficiency Test Scores",
+          ],
+          notes: [
+            "Apply through the Study in Saudi central portal before contacting individual universities",
+            "KFUPM is among the most competitive STEM universities in the Arab world (~5–8% acceptance)",
+            "KAUST is graduate-only but offers full scholarships covering tuition, housing, and a monthly stipend",
+            "King Abdulaziz University offers full scholarships specifically for international Muslim students",
+            "All documents must be attested and legalised by the Saudi Embassy before submission",
+            "Muslim-friendly environment — widely available halal food and prayer facilities on all campuses",
+          ],
+          unis: [
+            "King Fahd University of Petroleum & Minerals (KFUPM)",
+            "King Abdullah University of Science & Technology (KAUST)",
+            "King Abdulaziz University (KAU)",
+            "King Saud University (KSU)",
+            "Prince Mohammad bin Fahd University (PMU)",
+          ],
+          acceptance: {
+            KFUPM: "5–8%",
+            KAUST: "5–10%",
+            KAU: "10–15%",
+            KSU: "5–10%",
+            PMU: "70–75%",
+          },
+          badge: "success",
+          badgeText: "Full scholarships",
+        },
+        {
+          id: "egypt",
+          flag: "🇪🇬",
+          name: "Egypt",
+          deadline: "Varies by university",
+          portals: [
+            {
+              name: "Study in Egypt Portal",
+              url: "https://admission.study-in-egypt.gov.eg/",
+            },
+          ],
+          requirements: [
+            "Equated Secondary School Certificate (approved by the Egyptian Ministry of Education)",
+            "Wafeden Portal registration (official registration via Egypt's international student ministry)",
+            "Valid Student Visa",
+            "Medical Check Report (specifically an HIV-negative certificate)",
+            "Copy of a Valid Passport",
+            "Proof of Tuition Fee Payment",
+          ],
+          notes: [
+            "Register on the Wafeden Portal first — it is the official gateway for international students",
+            "The American University in Cairo (AUC) follows a US-style application process and uses SAT/ACT scores",
+            "AUC is English-medium and the most internationally accessible option (~30–35% acceptance)",
+            "Public universities are very affordable; AUC fees are higher but comparable to mid-range US schools",
+            "Arabic is the primary language at most public universities; AUC is fully English-medium",
+            "An HIV-negative certificate is specifically required — obtain this from a certified lab",
+          ],
+          unis: [
+            "The American University in Cairo (AUC)",
+            "Cairo University",
+            "Ain Shams University",
+            "Alexandria University",
+            "Mansoura University",
+          ],
+          acceptance: {
+            AUC: "30–35%",
+            "Cairo University": "45%",
+            "Ain Shams": "60%",
+          },
+          badge: "info",
+          badgeText: "Wafeden portal",
+        },
+        {
+          id: "belgium",
+          flag: "🇧🇪",
+          name: "Belgium",
+          deadline: "Varies by university",
+          portals: [],
+          requirements: [
+            "Secondary Education Diploma equivalence certificate",
+            "Proof of Language Proficiency (Dutch, French, or English depending on program)",
+            "Belgian Student Visa (Type D)",
+            "Proof of Sufficient Financial Means",
+            "Comprehensive Health Insurance Coverage",
+            "Certificate of Good Conduct (criminal record clearance)",
+          ],
+          notes: [
+            "No central portal — apply directly through each university's website",
+            "Belgium has two main university systems: Dutch-speaking (Flanders) and French-speaking (Wallonia)",
+            "KU Leuven is Belgium's highest-ranked university and one of Europe's oldest (founded 1425)",
+            "Many programs taught in English, especially at master's level",
+            "Tuition fees are relatively low compared to UK/USA — roughly €900–€4,000/year for non-EU students",
+            "Medicine at KU Leuven drops to ~11% acceptance — extremely competitive",
+          ],
+          unis: [
+            "KU Leuven",
+            "Ghent University",
+            "Université Catholique de Louvain (UCLouvain)",
+            "Vrije Universiteit Brussel (VUB)",
+            "University of Antwerp",
+          ],
+          acceptance: {
+            "KU Leuven": "73% (general) / ~11% (Medicine)",
+            "Ghent University": "34%",
+            UCLouvain: "30%",
+            VUB: "20–30%",
+            "Univ. of Antwerp": "25–45%",
+          },
+          badge: "info",
+          badgeText: "Direct apply",
+        },
+        {
+          id: "hongkong",
+          flag: "🇭🇰",
+          name: "Hong Kong",
+          deadline: "November – February",
+          portals: [],
+          requirements: [
+            "Recognised national secondary qualification (NSC accepted)",
+            "English Language proficiency — IELTS or TOEFL scores",
+            "Hong Kong Student Visa (sponsored by the accepting university)",
+            "Proof of Financial Sufficiency",
+            "Official Academic Transcripts",
+          ],
+          notes: [
+            "No central portal — apply directly through each university's website",
+            "English is the primary language of instruction at all top universities",
+            "HKU, CUHK, and HKUST are all ranked in the global top 50",
+            "SAT/ACT or IB scores significantly strengthen your application",
+            "Student visa is sponsored and processed by the university once admitted",
+            "Very safe, cosmopolitan city with a large international student community",
+          ],
+          unis: [
+            "The University of Hong Kong (HKU)",
+            "The Chinese University of Hong Kong (CUHK)",
+            "HKUST (Hong Kong Univ. of Science & Technology)",
+            "City University of Hong Kong (CityU)",
+            "Hong Kong Polytechnic University (PolyU)",
+          ],
+          acceptance: {
+            HKU: "10%",
+            CUHK: "12%",
+            HKUST: "15%",
+            CityU: "30–35%",
+            PolyU: "25%",
+          },
+          badge: "info",
+          badgeText: "Direct apply",
+        },
+        {
+          id: "sweden",
+          flag: "🇸🇪",
+          name: "Sweden",
+          deadline: "October 15 (main round)",
+          portals: [
+            {
+              name: "University Admissions Sweden",
+              url: "https://www.universityadmissions.se/",
+            },
+          ],
+          requirements: [
+            "Upper Secondary Certificate equivalent to Swedish standards (NSC accepted)",
+            "English Language Proficiency — IELTS, TOEFL, or Cambridge test scores",
+            "Specific course prerequisites (varies by programme)",
+            "Payment of application and first tuition fee instalment (non-EU/EEA students)",
+            "Swedish Residence Permit for Studies (applied for after admission)",
+          ],
+          notes: [
+            "One central portal covers almost all Swedish universities — very streamlined",
+            "Non-EU/EEA students pay tuition fees (~SEK 80,000–145,000/year); EU/EEA students study free",
+            "Most master's programmes are fully in English; bachelor's degrees are largely in Swedish",
+            "KTH is Sweden's top technical university — strong for engineering and ICT",
+            "Apply for your residence permit through the Swedish Migration Agency after receiving your offer",
+            "Swedish Institute scholarships available for non-EU students — competitive but worth applying",
+          ],
+          unis: [
+            "Lund University",
+            "KTH Royal Institute of Technology",
+            "Uppsala University",
+            "Stockholm University",
+            "Chalmers University of Technology",
+          ],
+          acceptance: {
+            "Lund University": "30–35%",
+            KTH: "40–50%",
+            "Uppsala University": "65–70%",
+            "Stockholm University": "40–45%",
+            Chalmers: "80–85%",
+          },
+          badge: "info",
+          badgeText: "Central portal",
+        },
+        {
+          id: "malaysia",
+          flag: "🇲🇾",
+          name: "Malaysia",
+          deadline: "Varies by university",
+          portals: [
+            {
+              name: "Education Malaysia (EMGS)",
+              url: "https://visa.educationmalaysia.gov.my/",
+            },
+          ],
+          requirements: [
+            "High School Leaving Certificate / Senior Secondary Transcripts (NSC accepted)",
+            "Visa Approval Letter (VAL) issued by EMGS — initiated by your university",
+            "English Language Qualification — IELTS, TOEFL, or MUET",
+            "International Student Medical Health Report (pre-arrival screening)",
+            "Proof of Financial Capability",
+          ],
+          notes: [
+            "Apply to the university first — they initiate the EMGS visa process on your behalf",
+            "One of the most affordable English-medium study destinations in Asia",
+            "UTP (Universiti Teknologi Petronas) is the most selective at ~10% — excellent for engineering",
+            "Many UK and Australian universities have branch campuses here (e.g. Monash Malaysia, Nottingham Malaysia)",
+            "English is the medium of instruction at all top universities",
+            "Muslim-friendly country — halal food everywhere and prayer facilities on all campuses",
+          ],
+          unis: [
+            "Universiti Teknologi Petronas (UTP)",
+            "Universiti Malaya (UM)",
+            "Universiti Putra Malaysia (UPM)",
+            "Universiti Sains Malaysia (USM)",
+            "Universiti Teknologi Malaysia (UTM)",
+          ],
+          acceptance: {
+            UTP: "10%",
+            UM: "34%",
+            UPM: "40%",
+            USM: "55%",
+            UTM: "63%",
+          },
+          badge: "success",
+          badgeText: "Affordable + halal",
+        },
+        {
+          id: "portugal",
+          flag: "🇵🇹",
+          name: "Portugal",
+          deadline: "Varies (typically March – June)",
+          portals: [],
+          requirements: [
+            "High School Diploma validated by the Portuguese Embassy or Apostille",
+            "National Access Exam equivalent (Enem, SAT, or university-specific international entrance exam)",
+            "Portuguese Residence Visa for Study Purposes",
+            "Proof of B2-level Language Proficiency — Portuguese or English depending on course",
+            "International Medical Insurance Policy",
+            "Clean Criminal Record Certificate",
+          ],
+          notes: [
+            "No central portal — apply directly through each university's website",
+            "University of Coimbra is the oldest in Portugal (founded 1290) and one of the oldest in the world",
+            "Many programmes now offered in English, especially at master's level",
+            "Tuition fees are very affordable compared to UK/USA — roughly €950–€7,000/year",
+            "Portugal offers a Post-Study Work Visa, making it a great long-term option",
+            "Lisbon and Porto are consistently ranked among Europe's best student cities for cost and quality of life",
+          ],
+          unis: [
+            "University of Lisbon (ULisboa)",
+            "University of Porto (U.Porto)",
+            "University of Coimbra",
+            "Universidade Nova de Lisboa",
+            "University of Minho",
+          ],
+          acceptance: {
+            "Univ. of Coimbra": "13%",
+            "Univ. of Porto": "20–25%",
+            ULisboa: "25–30%",
+            "Nova de Lisboa": "40%",
+            "Univ. of Minho": "50%",
+          },
+          badge: "info",
+          badgeText: "Direct apply",
+        },
+        {
+          id: "argentina",
+          flag: "🇦🇷",
+          name: "Argentina",
+          deadline: "Varies (typically February / August)",
+          portals: [],
+          requirements: [
+            "Secondary School Certificate apostilled and legalised by the Argentine Ministry of Education",
+            "Official Spanish translation of all academic documents (by a certified Argentine translator)",
+            "Argentine Student Visa / Temporary Residence Permit",
+            "CELU or DELE Certificate — proof of Spanish language proficiency",
+            "Certificate of Clean Criminal Background",
+          ],
+          notes: [
+            "No central portal — apply directly through each university's website",
+            "University of Buenos Aires (UBA) has an open admission policy — no entrance exam, but a mandatory introductory CBC cycle (~43% complete it)",
+            "Public universities charge NO tuition fees — even for international students",
+            "Spanish proficiency is essential as most programmes are taught in Spanish",
+            "Buenos Aires is a vibrant, culturally rich city with a very low cost of living",
+            "Austral University and Di Tella are top private options with more structured admission",
+          ],
+          unis: [
+            "University of Buenos Aires (UBA)",
+            "National University of La Plata (UNLP)",
+            "National University of Córdoba (UNC)",
+            "Austral University",
+            "Torcuato Di Tella University",
+          ],
+          acceptance: {
+            "UBA (CBC cycle)": "~43% complete",
+            UNLP: "70%",
+            UNC: "70%",
+            "Austral University": "37%",
+            "Di Tella": "50%",
+          },
+          badge: "success",
+          badgeText: "Free tuition (public)",
+        },
+        {
+          id: "denmark",
+          flag: "🇩🇰",
+          name: "Denmark",
+          deadline: "March 15 (main round)",
+          portals: [
+            {
+              name: "Optagelse.dk",
+              url: "https://www.optagelse.dk/",
+            },
+          ],
+          requirements: [
+            "Secondary School Exam credentials equivalent to a Danish Upper Secondary Exit Exam",
+            "Verification of specific subject hours — strict math/science hour requirements for STEM programmes",
+            "English Language Test Results — IELTS or TOEFL",
+            "Danish Residence Permit for Tertiary Studies",
+            "Payment of mandatory tuition fees (non-EU/EEA nationals only)",
+          ],
+          notes: [
+            "Central portal Optagelse.dk covers most Danish universities — straightforward to use",
+            "Non-EU/EEA students pay tuition fees (~DKK 45,000–120,000/year); EU/EEA students study free",
+            "Most programmes at bachelor's level are in Danish; master's degrees widely available in English",
+            "University of Copenhagen is Denmark's highest-ranked university and one of Northern Europe's best",
+            "DTU (Technical University of Denmark) is world-class for engineering, energy, and sustainability",
+            "Denmark consistently ranks among the happiest and safest countries in the world — excellent quality of life",
+          ],
+          unis: [
+            "University of Copenhagen",
+            "Aarhus University",
+            "Technical University of Denmark (DTU)",
+            "Aalborg University",
+            "University of Southern Denmark (SDU)",
+          ],
+          acceptance: {
+            "Univ. of Copenhagen": "35–40%",
+            "Aarhus University": "45%",
+            DTU: "50%",
+            "Aalborg University": "60%",
+            SDU: "55%",
+          },
+          badge: "info",
+          badgeText: "Optagelse portal",
+        },
+        {
+          id: "qatar",
+          flag: "🇶🇦",
+          name: "Qatar",
+          deadline: "Varies by institution (typically January – March)",
+          portals: [],
+          requirements: [
+            "Official High School Transcript certified by the Ministry of Foreign Affairs",
+            "SAT / ACT scores (required for most American branch campuses)",
+            "English Competency — TOEFL or IELTS scores",
+            "Qatari Student Visa and Residency Permit (sponsored by the university or Qatar Foundation)",
+            "Comprehensive Health Examination Certificate",
+          ],
+          notes: [
+            "No central portal — apply directly through each institution's website",
+            "Education City in Doha hosts branch campuses of top US universities — same degree, same standards",
+            "Weill Cornell Medicine-Qatar is one of the most selective medical schools in the world (~5–8%)",
+            "Qatar Foundation fully funds tuition and living costs for selected students at Education City campuses",
+            "English is the medium of instruction at all international branch campuses",
+            "Very safe, modern city with a high standard of living and a large international community",
+            "Muslim-friendly environment — halal food and prayer facilities on all campuses",
+          ],
+          unis: [
+            "Weill Cornell Medicine – Qatar",
+            "Texas A&M University at Qatar",
+            "Carnegie Mellon University in Qatar",
+            "Georgetown University in Qatar",
+            "Qatar University",
+          ],
+          acceptance: {
+            "Weill Cornell Medicine-Q": "5–8%",
+            "Texas A&M Qatar": "15–20%",
+            "CMU Qatar": "20%",
+            "Georgetown Qatar": "25%",
+            "Qatar University": "40%",
+          },
+          badge: "success",
+          badgeText: "QF scholarships",
+        },
+        {
+          id: "scotland",
+          flag: "󠁧󠁢󠁣SCT",
+          name: "Scotland",
+          deadline: "January 29 (UCAS deadline)",
+          portals: [
+            {
+              name: "UCAS Hub",
+              url: "https://accounts.ucas.com/",
+            },
+          ],
+          requirements: [
+            "UCAS Application submission",
+            "High School Qualifications — NSC, IB Diploma, SATs/APs, or A-Levels accepted",
+            "UK Student Visa (Confirmation of Acceptance for Studies — CAS — issued by the university)",
+            "English Language Certification — IELTS Academic (UKVI standard)",
+            "Academic Reference Letter and Personal Statement",
+          ],
+          notes: [
+            "Scotland uses the same UCAS portal as the rest of the UK — one application covers all",
+            "Scottish undergraduate degrees are typically 4 years, giving an extra year of depth vs England's 3",
+            "University of St Andrews is among the most selective in the UK at ~8–10% — world-class for science and philosophy",
+            "University of Edinburgh is ranked #17 globally and is one of the most prestigious in Europe",
+            "Cannot apply to both Oxford/Cambridge AND St Andrews in some application rounds — check UCAS rules",
+            "Edinburgh and Glasgow are consistently ranked among the best student cities in Europe for culture and affordability",
+          ],
+          unis: [
+            "University of St Andrews",
+            "University of Edinburgh",
+            "University of Glasgow",
+            "University of Aberdeen",
+            "University of Strathclyde",
+          ],
+          acceptance: {
+            "St Andrews": "8–10%",
+            Edinburgh: "10–12%",
+            Glasgow: "15–18%",
+            Aberdeen: "40%",
+            Strathclyde: "35%",
+          },
+          badge: "info",
+          badgeText: "UCAS portal",
+        },
+        {
+          id: "india",
+          flag: "🇮🇳",
+          name: "India",
+          deadline: "Varies (typically March – June)",
+          portals: [
+            {
+              name: "Study in India Portal",
+              url: "https://www.studyinindia.gov.in/",
+            },
+          ],
+          requirements: [
+            "10+2 High School Certificate equivalence from the Association of Indian Universities (AIU)",
+            "Registration through the Study in India (SII) Portal or Direct Foreign Quota application",
+            "Valid Indian Student Visa",
+            "No-Objection Certificate (NOC) from the Ministry of External Affairs (if applicable)",
+            "Medical Fitness Certificate and HIV-Free Certificate",
+          ],
+          notes: [
+            "IITs (Indian Institutes of Technology) are among the world's most competitive universities — acceptance under 1%",
+            "IIT admissions for international students go through a Direct Foreign Quota — separate from the JEE exam required for Indian nationals",
+            "IISc Bangalore is India's top research institution, graduate-focused, and world-class for science and engineering",
+            "English is the medium of instruction at all IITs and IISc — no language barrier",
+            "Tuition fees are extremely low — IIT fees are roughly ₹200,000–₹300,000/year (~R40,000–R60,000)",
+            "India's STEM education is globally respected — IIT graduates are highly sought after worldwide",
+          ],
+          unis: [
+            "Indian Institute of Science (IISc Bangalore)",
+            "IIT Bombay",
+            "IIT Delhi",
+            "IIT Madras",
+            "University of Delhi",
+          ],
+          acceptance: {
+            IISc: "<1%",
+            "IIT Bombay": "<1%",
+            "IIT Delhi": "<1%",
+            "IIT Madras": "<1%",
+            "Univ. of Delhi": "5–10%",
+          },
+          badge: "warn",
+          badgeText: "Extremely selective",
+        },
+        {
+          id: "austria",
+          flag: "🇦🇹",
+          name: "Austria",
+          deadline: "Varies (typically June – September)",
+          portals: [],
+          requirements: [
+            "Special University Entrance Qualification (proof you could study this course in your home country)",
+            "Legalised High School Graduation Certificate with German translation",
+            "Austrian Residence Permit for Students (Aufenthaltsbewilligung Studierender)",
+            "German Language Test Score — ÖSD or Goethe-Zertifikat B2/C1 level",
+            "Proof of Health Insurance valid in Austria",
+          ],
+          notes: [
+            "No central portal — apply directly through each university's website",
+            "University of Vienna is the oldest university in the German-speaking world (founded 1365)",
+            "Tuition fees are very low — roughly €700–€1,500/year for most students",
+            "German proficiency is essential as most bachelor's programmes are taught in German",
+            "TU Wien and TU Graz are world-class for engineering and technology",
+            "Vienna consistently ranks as one of the world's most liveable cities",
+            "Many English-taught master's programmes available at TU Wien and TU Graz",
+          ],
+          unis: [
+            "University of Vienna",
+            "Vienna University of Technology (TU Wien)",
+            "Graz University of Technology (TU Graz)",
+            "Innsbruck University",
+            "Johannes Kepler University Linz",
+          ],
+          acceptance: {
+            "Univ. of Vienna": "70% / ~15% (entrance exam courses)",
+            "TU Wien": "60%",
+            "TU Graz": "65%",
+            "Innsbruck Univ.": "75%",
+            "JKU Linz": "80%",
+          },
+          badge: "success",
+          badgeText: "Low fees",
+        },
+        {
+          id: "taiwan",
+          flag: "🇹🇼",
+          name: "Taiwan",
+          deadline: "Varies (typically March – May)",
+          portals: [],
+          requirements: [
+            "High School Diploma translated to English or Chinese, verified by a Taiwan Overseas Mission",
+            "Two Letters of Recommendation",
+            "TOCFL score or English test scores for English-taught programmes",
+            "Taiwan Resident Visa for Studies",
+            "Financial Soundness Certificate showing minimum required balance",
+            "Health Certificate for International Students",
+          ],
+          notes: [
+            "No central portal — apply directly through each university's website",
+            "National Taiwan University (NTU) is consistently ranked among Asia's top 15 universities",
+            "Many English-taught programmes available, especially at NTU, NTHU, and NYCU",
+            "Tuition fees very affordable — roughly NT$50,000–NT$120,000/year (~R25,000–R60,000)",
+            "Taiwan is extremely safe, clean, and welcoming to international students",
+            "Strong for STEM — Taiwan's semiconductor industry creates outstanding internship opportunities",
+            "Taiwan MOE Scholarship available — covers tuition and a monthly stipend",
+          ],
+          unis: [
+            "National Taiwan University (NTU)",
+            "National Tsing Hua University (NTHU)",
+            "National Yang Ming Chiao Tung University (NYCU)",
+            "National Cheng Kung University (NCKU)",
+            "Taiwan Tech (NTUST)",
+          ],
+          acceptance: {
+            NTU: "15%",
+            NTHU: "20%",
+            NYCU: "22%",
+            NCKU: "25%",
+            "Taiwan Tech": "30%",
+          },
+          badge: "success",
+          badgeText: "MOE scholarship",
+        },
+        {
+          id: "spain",
+          flag: "🇪🇸",
+          name: "Spain",
+          deadline: "Varies (typically April – July)",
+          portals: [
+            {
+              name: "UNEDasiss Portal",
+              url: "https://unedasiss.uned.es/",
+            },
+          ],
+          requirements: [
+            "Homologación Certificate — official conversion of your NSC by the Spanish Ministry of Education",
+            "PCE Exams (Pruebas de Competencias Específicas) run by UNEDasiss",
+            "Spanish Student Visa (Type D)",
+            "DELE or SIELE Spanish Language Certificate (B2 minimum for Spanish-medium programmes)",
+            "Proof of Medical Insurance covering all of Spain",
+            "Proof of Funds (minimum benchmarked to IPREM index)",
+          ],
+          notes: [
+            "UNEDasiss is the gateway for international students — register here before applying to any university",
+            "The Homologación process can take several months — start well in advance",
+            "PCE subject exams are taken through UNEDasiss and required for most competitive programmes",
+            "Spanish proficiency (B2+) essential — almost all bachelor's degrees taught in Spanish",
+            "Several universities offer English-taught degrees, particularly in business and international relations",
+            "Public university fees are among the lowest in Western Europe — roughly €700–€3,500/year",
+            "Barcelona and Madrid are world-class student cities with vibrant culture and great weather",
+          ],
+          unis: [
+            "University of Barcelona",
+            "Autonomous University of Barcelona (UAB)",
+            "Complutense University of Madrid",
+            "Autonomous University of Madrid (UAM)",
+            "University of Valencia",
+          ],
+          acceptance: {
+            "Univ. of Barcelona": "40%",
+            UAB: "45%",
+            "Complutense Madrid": "50%",
+            UAM: "45%",
+            "Univ. of Valencia": "55%",
+          },
+          badge: "warn",
+          badgeText: "Spanish required",
         },
       ];
 
@@ -2487,50 +3463,249 @@
         },
       ];
 
+      // Maps TOP100 country names → COUNTRIES array ids
+      const COUNTRY_MAP = {
+        USA: "usa",
+        UK: "uk",
+        Germany: "germany",
+        Japan: "japan",
+        Australia: "australia",
+        Switzerland: "switzerland",
+        Singapore: "singapore",
+        "South Korea": "korea",
+        Canada: "canada",
+        France: "france",
+        Netherlands: "netherlands",
+        Türkiye: "turkey",
+        "South Africa": "southafrica",
+        China: "china",
+        Italy: "italy",
+        Norway: "norway",
+      };
+
       const CHECKLIST = {
         "Always required": [
           {
             id: "nsc",
             text: "NSC / Matric results (Grade 9–12, certified copies)",
           },
-          { id: "cert", text: "Certified copy of ID / passport" },
-          { id: "trans", text: "Official academic transcripts" },
+          {
+            id: "cert",
+            text: "Certified copy of ID / passport (valid for at least 6 months beyond your study start date)",
+          },
+          {
+            id: "trans",
+            text: "Official academic transcripts (stamped and signed by your school)",
+          },
+          {
+            id: "passphoto",
+            text: "Passport-sized photographs (many visa and application forms require these)",
+          },
         ],
         "Usually required": [
-          { id: "ps", text: "Personal statement / motivation letter" },
-          { id: "lor1", text: "Letter of recommendation — Teacher 1" },
-          { id: "lor2", text: "Letter of recommendation — Teacher 2" },
+          {
+            id: "ps",
+            text: "Personal statement / motivation letter (why this course, why this university)",
+          },
+          { id: "lor1", text: "Letter of recommendation — Subject Teacher 1" },
+          { id: "lor2", text: "Letter of recommendation — Subject Teacher 2" },
           { id: "lor3", text: "Counselor / principal reference letter" },
-          { id: "cv", text: "CV / resume (especially Germany, Netherlands)" },
+          {
+            id: "cv",
+            text: "CV / resume — especially Germany, Netherlands, Norway, and most master's applications",
+          },
           {
             id: "eng",
-            text: "English proficiency proof (IELTS / TOEFL if required)",
+            text: "English proficiency proof — IELTS Academic or TOEFL iBT (check each country's minimum score)",
+          },
+          {
+            id: "finproof",
+            text: "Proof of financial means / bank statements (required by most countries for visa applications)",
+          },
+          {
+            id: "medins",
+            text: "International medical/health insurance (required by Australia, South Africa, Belgium, Malaysia, and others)",
           },
         ],
-        "Country-specific": [
-          { id: "sat", text: "SAT / ACT scores (USA, Singapore)" },
-          { id: "eju", text: "EJU exam results (Japan)" },
-          { id: "yos", text: "TR-YÖS exam results (Türkiye)" },
+        "Entrance exams": [
+          {
+            id: "sat",
+            text: "SAT / ACT — USA (test-optional at most schools but strongly recommended); also boosts Singapore and Hong Kong apps",
+          },
+          {
+            id: "eju",
+            text: "EJU (Examination for Japanese University Admission) — Japan; strong SAT/ACT can substitute at some universities",
+          },
+          {
+            id: "yos",
+            text: "TR-YÖS exam — Türkiye (required for university entry; also needed for Türkiye Bursları scholarship)",
+          },
           {
             id: "mathexam",
-            text: "Maths entrance exam (Netherlands: Bossell-Bèta / OMPT)",
+            text: "Maths entrance exam — Netherlands: Bossell-Bèta or OMPT (required for many STEM programmes)",
           },
-          { id: "ethexam", text: "ETH Zurich entrance exam (Switzerland)" },
           {
-            id: "sup",
-            text: "Supplemental / university-specific essays (USA)",
+            id: "ethexam",
+            text: "ETH Zurich entrance exam — Switzerland (required for most programmes at ETH)",
+          },
+          {
+            id: "pce",
+            text: "PCE / Selectividad exams via UNEDasiss — Spain (required for all international applicants)",
+          },
+          {
+            id: "tolc",
+            text: "TOLC / IMAT entry exam — Italy (IMAT specifically for English-medium Medicine programmes)",
+          },
+        ],
+        "Application portals to register": [
+          {
+            id: "ucas",
+            text: "UCAS account — UK & Scotland (set up early; opens 13 May for the following year's entry)",
+          },
+          {
+            id: "commonapp",
+            text: "Common App account — USA (covers ~14 of the top 18 US universities; 20 school limit)",
+          },
+          {
+            id: "uniassist",
+            text: "uni-assist registration — Germany (required by many German universities for document processing)",
+          },
+          {
+            id: "universitaly",
+            text: "Universitaly pre-enrolment — Italy (mandatory first step before applying to any Italian university)",
+          },
+          {
+            id: "unedasiss",
+            text: "UNEDasiss registration — Spain (gateway for all international applicants; needed before applying anywhere)",
+          },
+          {
+            id: "wafeden",
+            text: "Wafeden Portal registration — Egypt (official international student registration portal)",
+          },
+          {
+            id: "emgs",
+            text: "EMGS Visa Approval Letter (VAL) — Malaysia (initiated through your chosen university after acceptance)",
+          },
+          {
+            id: "studyinsaudi",
+            text: "Study in Saudi eligibility approval — Saudi Arabia (required before contacting individual universities)",
+          },
+        ],
+        "Language proficiency certificates": [
+          {
+            id: "german",
+            text: "German language certificate B2/C1 — Germany & Austria (Goethe-Zertifikat or ÖSD; most bachelor's taught in German)",
+          },
+          {
+            id: "french",
+            text: "French language proficiency — France (required for French-taught programmes; DELF/DALF or TCF)",
+          },
+          {
+            id: "spanish",
+            text: "Spanish language certificate B2+ — Spain & Argentina (DELE or SIELE; almost all bachelor's taught in Spanish)",
+          },
+          {
+            id: "hsk",
+            text: "HSK certificate — China (Chinese proficiency test; not required for English-taught programmes)",
+          },
+          {
+            id: "tocfl",
+            text: "TOCFL certificate — Taiwan (Chinese proficiency; not required for English-taught programmes)",
+          },
+          {
+            id: "korean",
+            text: "TOPIK (Korean proficiency) — South Korea (required for Korean-taught programmes; not needed for KAIST/POSTECH English tracks)",
+          },
+          {
+            id: "japanese",
+            text: "JLPT (Japanese Language Proficiency Test) — Japan (useful for daily life; EJU covers academic Japanese)",
+          },
+        ],
+        "Document legalisation & verification": [
+          {
+            id: "apostille",
+            text: "Apostille on NSC and certificates — required by Spain, Argentina, Italy, Portugal, and others",
+          },
+          {
+            id: "saudiatttest",
+            text: "Embassy attestation / legalisation — Saudi Arabia (all documents must be attested by the Saudi Embassy in Pretoria)",
+          },
+          {
+            id: "declval",
+            text: "Declaration of Value (Dichiarazione di Valore) or CIMEA Statement — Italy (verifies your NSC for Italian institutions)",
+          },
+          {
+            id: "homolog",
+            text: "Homologación Certificate — Spain (official NSC conversion by the Spanish Ministry of Education; takes several months)",
+          },
+          {
+            id: "aiuequiv",
+            text: "AIU equivalence certificate — India (Association of Indian Universities; verifies your NSC for Indian institutions)",
+          },
+          {
+            id: "police",
+            text: "Police clearance / criminal record certificate — required by Saudi Arabia, Egypt, Belgium, Argentina, Portugal, Norway, and others",
+          },
+          {
+            id: "medclear",
+            text: "Medical clearance certificate — required by Saudi Arabia, Egypt, China, India, and Malaysia (HIV-free certificate specifically required for Egypt)",
+          },
+        ],
+        "Scholarships to apply for": [
+          {
+            id: "mext",
+            text: "MEXT Scholarship — Japan (apply through the Embassy of Japan in Pretoria; covers tuition, living costs, and flights)",
+          },
+          {
+            id: "gks",
+            text: "GKS — Global Korea Scholarship (covers full tuition and living costs; apply through the Korean Embassy)",
+          },
+          {
+            id: "tburslari",
+            text: "Türkiye Bursları — Turkey (full scholarship: tuition + accommodation + monthly stipend; opens January)",
+          },
+          {
+            id: "qf",
+            text: "Qatar Foundation scholarship — Qatar (full funding for Education City branch campus students; apply directly)",
+          },
+          {
+            id: "csc",
+            text: "CSC — Chinese Government Scholarship (covers tuition, accommodation, and stipend; apply via the Chinese Embassy)",
+          },
+          {
+            id: "si",
+            text: "Swedish Institute Scholarship — Sweden (competitive; for non-EU master's students; apply via si.se)",
+          },
+          {
+            id: "moe",
+            text: "Taiwan MOE Scholarship — Taiwan (covers tuition and monthly stipend; apply through the Taiwan Mission in Pretoria)",
+          },
+          {
+            id: "kaust",
+            text: "KAUST Fellowship — Saudi Arabia (graduate-only; covers full tuition, housing, and a generous monthly stipend)",
           },
         ],
         "Optional but recommended": [
           {
             id: "ap",
-            text: "AP exam scores (Singapore, USA — significantly boosts chances)",
+            text: "AP exam scores — significantly boosts applications to Singapore (NUS/NTU), USA, and Hong Kong",
           },
           {
             id: "port",
-            text: "Portfolio (for arts, design, or architecture programs)",
+            text: "Portfolio — required or strongly recommended for arts, design, architecture, and film programmes",
           },
-          { id: "ib", text: "IB diploma / predicted grades letter" },
+          {
+            id: "ib",
+            text: "IB diploma / predicted grades letter — widely recognised and can strengthen applications globally",
+          },
+          {
+            id: "extracurr",
+            text: "Evidence of extracurricular activities / leadership roles — especially important for US and UK applications",
+          },
+          {
+            id: "researchexp",
+            text: "Research experience or publications — valuable for highly selective programmes (IITs, KAIST, NUS, etc.)",
+          },
         ],
       };
 
@@ -2547,6 +3722,7 @@
           .querySelectorAll(".tab")
           .forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
 
       function enterApp() {
@@ -2566,8 +3742,8 @@
           .map(
             (c) => `
     <div class="country-card${activeCountry === c.id ? " active" : ""}" onclick="selectCountry('${c.id}')">
-      <div class="flag">${c.flag}</div>
       <h3>${c.name}</h3>
+      <div class="flag">${c.flag}</div>
       <div class="deadline"><i class="ti ti-calendar" aria-hidden="true" style="font-size:13px"></i>${c.deadline}</div>
       <div class="badge ${c.badge}">${c.badgeText}</div>
     </div>
@@ -2653,8 +3829,14 @@
           return;
         }
         el.innerHTML = list
-          .map(
-            (u) => `
+          .map((u) => {
+            const countryId = COUNTRY_MAP[u.country];
+            const countryBtn = countryId
+              ? `<button class="uni-country-link" onclick="goToCountry('${countryId}', event)">
+                    <i class="ti ti-map-pin" aria-hidden="true" style="font-size:13px"></i>View ${u.country} guide
+                   </button>`
+              : "";
+            return `
     <div class="uni-item${openUni === u.rank ? " open" : ""}" id="uni-${u.rank}" onclick="toggleUni(${u.rank})">
       <div class="uni-item-header">
         <span class="rank">${u.rank}</span>
@@ -2666,17 +3848,54 @@
         <ul>${u.desc.map((d) => `<li>${d}</li>`).join("")}</ul>
         <a href="${u.url}" class="uni-site-link" target="_blank" rel="noopener">
           <i class="ti ti-external-link" aria-hidden="true" style="font-size:13px"></i>Visit website
-        </a>
+        </a>${countryBtn}
       </div>
     </div>
-  `,
-          )
+  `;
+          })
           .join("");
       }
 
       function toggleUni(rank) {
-        openUni = openUni === rank ? null : rank;
-        filterUnis();
+        const current = document.getElementById(`uni-${rank}`);
+        const previous = document.querySelector(".uni-item.open");
+
+        if (previous && previous !== current) {
+          previous.classList.remove("open");
+        }
+
+        if (!current) {
+          openUni = openUni === rank ? null : rank;
+          return;
+        }
+
+        const isOpening = !current.classList.contains("open");
+        current.classList.toggle("open", isOpening);
+        openUni = isOpening ? rank : null;
+      }
+
+      function goToCountry(countryId, event) {
+        event.stopPropagation(); // don't let the click bubble up to toggleUni
+        // Switch to Countries tab
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        document.getElementById("page-countries").classList.add("active");
+        document
+          .querySelectorAll(".tab")
+          .forEach((b) => b.classList.remove("active"));
+        document.querySelector(".tab").classList.add("active");
+        // Scroll to top first so the panel isn't offscreen
+        window.scrollTo({ top: 0, behavior: "instant" });
+        // Open the country (force close any open one first)
+        activeCountry = null;
+        selectCountry(countryId);
+        // Give the DOM a tick to render, then scroll the detail into view
+        setTimeout(() => {
+          const detail = document.getElementById("country-detail");
+          if (detail)
+            detail.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 80);
       }
 
       function filterUnis() {
@@ -2761,6 +3980,56 @@
         checks[id] = !checks[id];
         renderChecklist();
       }
+
+      function scrollToTop() {
+        const start = window.scrollY;
+        const duration = 160;
+        const startTime = performance.now();
+
+        function step(timestamp) {
+          const elapsed = timestamp - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const ease = 1 - Math.pow(1 - progress, 3);
+          window.scrollTo(0, Math.floor(start * (1 - ease)));
+
+          if (progress < 1) {
+            requestAnimationFrame(step);
+          }
+        }
+
+        requestAnimationFrame(step);
+      }
+
+      function updateBackToTop() {
+        const btn = document.getElementById("backToTop");
+        if (window.scrollY > 320) {
+          btn.classList.add("show");
+        } else {
+          btn.classList.remove("show");
+        }
+      }
+
+      function updateLiveClock() {
+        const el = document.getElementById("liveClock");
+        if (!el) return;
+        const now = new Date();
+        el.textContent = now.toLocaleString("en-ZA", {
+          weekday: "short",
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        });
+      }
+
+      window.addEventListener("scroll", updateBackToTop);
+      window.addEventListener("load", () => {
+        updateBackToTop();
+        updateLiveClock();
+        setInterval(updateLiveClock, 1000);
+      });
 
       renderCountries(COUNTRIES);
       renderFilters();
