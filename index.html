@@ -2150,7 +2150,7 @@
         },
         {
           id: "scotland",
-          flag: "󠁧󠁢󠁣SCT",
+          flag: "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
           name: "Scotland",
           deadline: "January 29 (UCAS deadline)",
           portals: [
@@ -3731,36 +3731,15 @@
         showTab("countries", document.querySelector(".tab"));
       }
 
-      function renderCountries(list) {
+      function getGridColumns() {
         const grid = document.getElementById("country-grid");
-        if (!list.length) {
-          grid.innerHTML =
-            '<div class="no-results">No countries match your search.</div>';
-          return;
-        }
-        grid.innerHTML = list
-          .map(
-            (c) => `
-    <div class="country-card${activeCountry === c.id ? " active" : ""}" onclick="selectCountry('${c.id}')">
-      <h3>${c.name}</h3>
-      <div class="flag">${c.flag}</div>
-      <div class="deadline"><i class="ti ti-calendar" aria-hidden="true" style="font-size:13px"></i>${c.deadline}</div>
-      <div class="badge ${c.badge}">${c.badgeText}</div>
-    </div>
-  `,
-          )
-          .join("");
+        if (!grid) return 1;
+        const style = window.getComputedStyle(grid);
+        const cols = style.gridTemplateColumns.split(" ").length;
+        return cols || 1;
       }
 
-      function selectCountry(id) {
-        activeCountry = activeCountry === id ? null : id;
-        renderCountries(COUNTRIES);
-        const detail = document.getElementById("country-detail");
-        if (!activeCountry) {
-          detail.innerHTML = "";
-          return;
-        }
-        const c = COUNTRIES.find((x) => x.id === id);
+      function buildDetailHTML(c) {
         const portalsHTML = c.portals.length
           ? c.portals
               .map(
@@ -3772,16 +3751,15 @@
 
         const accHTML = Object.entries(c.acceptance).length
           ? `<div class="section-label">Estimated acceptance rates (2027 projection)</div>
-       <div class="acc-list">${Object.entries(c.acceptance)
-         .map(
-           ([u, r]) =>
-             `<div class="acc-item"><span>${u}</span><span class="rate">${r}</span></div>`,
-         )
-         .join("")}</div>`
+             <div class="acc-list">${Object.entries(c.acceptance)
+               .map(
+                 ([u, r]) =>
+                   `<div class="acc-item"><span>${u}</span><span class="rate">${r}</span></div>`,
+               )
+               .join("")}</div>`
           : "";
 
-        detail.innerHTML = `
-    <div class="detail-panel">
+        return `<div class="detail-panel" id="inline-detail">
       <div class="detail-header">
         <h2>${c.flag} ${c.name} <span class="sub">— ${c.deadline}</span></h2>
         <button class="close-btn" onclick="selectCountry('${c.id}')"><i class="ti ti-x" aria-hidden="true" style="font-size:13px"></i>Close</button>
@@ -3798,24 +3776,72 @@
           <ul class="req-list">${c.notes.map((n) => `<li>${n}</li>`).join("")}</ul>
         </div>
       </div>
-      ${
-        c.unis.length
-          ? `
-        <div class="section-label">Notable universities</div>
-        <div class="tags-wrap">${c.unis.map((u) => `<span class="tag">${u}</span>`).join("")}</div>
-      `
-          : ""
-      }
+      ${c.unis.length ? `<div class="section-label">Notable universities</div><div class="tags-wrap">${c.unis.map((u) => `<span class="tag">${u}</span>`).join("")}</div>` : ""}
       ${accHTML}
-    </div>
-  `;
-        detail.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    </div>`;
+      }
+
+      function renderCountries(list) {
+        const grid = document.getElementById("country-grid");
+        if (!list.length) {
+          grid.innerHTML =
+            '<div class="no-results">No countries match your search.</div>';
+          return;
+        }
+
+        const cols = getGridColumns();
+        const activeIdx = activeCountry
+          ? list.findIndex((c) => c.id === activeCountry)
+          : -1;
+        // Last index of the row that contains the active card
+        const rowEndIdx =
+          activeIdx >= 0
+            ? Math.min(
+                Math.ceil((activeIdx + 1) / cols) * cols - 1,
+                list.length - 1,
+              )
+            : -1;
+
+        let html = "";
+        list.forEach((c, i) => {
+          html += `<div class="country-card${activeCountry === c.id ? " active" : ""}" onclick="selectCountry('${c.id}')">
+      <div class="flag">${c.flag}</div>
+      <h3>${c.name}</h3>
+      <div class="deadline"><i class="ti ti-calendar" aria-hidden="true" style="font-size:13px"></i>${c.deadline}</div>
+      <div class="badge ${c.badge}">${c.badgeText}</div>
+    </div>`;
+          if (i === rowEndIdx) {
+            const activeC = COUNTRIES.find((x) => x.id === activeCountry);
+            html += `<div class="detail-panel-row" style="grid-column: 1 / -1;">${buildDetailHTML(activeC)}</div>`;
+          }
+        });
+
+        grid.innerHTML = html;
+
+        if (activeCountry) {
+          requestAnimationFrame(() => {
+            const panel = document.getElementById("inline-detail");
+            if (panel)
+              panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          });
+        }
+      }
+
+      function selectCountry(id) {
+        activeCountry = activeCountry === id ? null : id;
+        document.getElementById("country-detail").innerHTML = "";
+        renderCountries(COUNTRIES);
       }
 
       function filterCountries(q) {
         const filtered = COUNTRIES.filter((c) =>
           c.name.toLowerCase().includes(q.toLowerCase()),
         );
+        // If the active country is no longer in the filtered list, deselect it
+        if (activeCountry && !filtered.find((c) => c.id === activeCountry)) {
+          activeCountry = null;
+          document.getElementById("country-detail").innerHTML = "";
+        }
         renderCountries(filtered);
       }
 
@@ -3875,7 +3901,7 @@
       }
 
       function goToCountry(countryId, event) {
-        event.stopPropagation(); // don't let the click bubble up to toggleUni
+        event.stopPropagation();
         // Switch to Countries tab
         document
           .querySelectorAll(".page")
@@ -3885,17 +3911,16 @@
           .querySelectorAll(".tab")
           .forEach((b) => b.classList.remove("active"));
         document.querySelector(".tab").classList.add("active");
-        // Scroll to top first so the panel isn't offscreen
         window.scrollTo({ top: 0, behavior: "instant" });
-        // Open the country (force close any open one first)
+        // Open the country
         activeCountry = null;
         selectCountry(countryId);
-        // Give the DOM a tick to render, then scroll the detail into view
+        // Scroll to the inline panel after render
         setTimeout(() => {
-          const detail = document.getElementById("country-detail");
-          if (detail)
-            detail.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 80);
+          const panel = document.getElementById("inline-detail");
+          if (panel)
+            panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }, 100);
       }
 
       function filterUnis() {
@@ -4025,6 +4050,13 @@
       }
 
       window.addEventListener("scroll", updateBackToTop);
+      let resizeTimer;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          if (activeCountry) renderCountries(COUNTRIES);
+        }, 120);
+      });
       window.addEventListener("load", () => {
         updateBackToTop();
         updateLiveClock();
