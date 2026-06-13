@@ -227,6 +227,13 @@
         border: 1.5px solid var(--blue-mid);
       }
 
+      @media (max-width: 600px) {
+        .country-card.active {
+          border-color: var(--blue-mid);
+          box-shadow: 0 0 0 3px rgba(24, 95, 165, 0.15);
+        }
+      }
+
       .country-card .flag {
         font-size: 20px;
         margin-bottom: 10px;
@@ -490,8 +497,15 @@
       .filter-row {
         display: flex;
         gap: 6px;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
         margin-bottom: 1rem;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+      .filter-row::-webkit-scrollbar {
+        display: none;
       }
       .filter-btn {
         padding: 4px 12px;
@@ -502,6 +516,8 @@
         cursor: pointer;
         color: var(--text-secondary);
         transition: all 0.15s;
+        flex-shrink: 0;
+        white-space: nowrap;
       }
       .filter-btn:hover {
         color: var(--text);
@@ -1060,9 +1076,7 @@
     <div id="main-app" style="display: none">
       <nav class="topbar">
         <div class="topbar-inner">
-          <div class="brand">
-            University Guide <span>for International Applicants</span>
-          </div>
+          <div class="brand">University Guide</div>
           <div class="tabs">
             <button class="tab active" onclick="showTab('countries', this)">
               Countries
@@ -3804,7 +3818,8 @@
 
         let html = "";
         list.forEach((c, i) => {
-          html += `<div class="country-card${activeCountry === c.id ? " active" : ""}" onclick="selectCountry('${c.id}')">
+          const isActive = activeCountry === c.id;
+          html += `<div class="country-card${isActive ? " active" : ""}"${isActive ? ' id="active-card"' : ""} onclick="selectCountry('${c.id}')">
       <div class="flag">${c.flag}</div>
       <h3>${c.name}</h3>
       <div class="deadline"><i class="ti ti-calendar" aria-hidden="true" style="font-size:13px"></i>${c.deadline}</div>
@@ -3820,9 +3835,18 @@
 
         if (activeCountry) {
           requestAnimationFrame(() => {
-            const panel = document.getElementById("inline-detail");
-            if (panel)
-              panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            // On mobile scroll to the card so the user sees both the highlighted card
+            // and the panel sliding in directly below it — makes the interaction legible.
+            // On desktop the panel alone scrolling into view is fine.
+            const isMobile = window.innerWidth <= 600;
+            const target = isMobile
+              ? document.getElementById("active-card")
+              : document.getElementById("inline-detail");
+            if (target)
+              target.scrollIntoView({
+                behavior: "smooth",
+                block: isMobile ? "start" : "nearest",
+              });
           });
         }
       }
