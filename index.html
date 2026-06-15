@@ -180,7 +180,7 @@
       }
       .search-wrap input {
         width: 100%;
-        padding: 10px 12px 10px 38px;
+        padding: 10px 36px 10px 38px;
         font-size: 14px;
         border: 0.5px solid var(--border-hover);
         border-radius: var(--radius-lg);
@@ -192,6 +192,34 @@
       .search-wrap input:focus {
         border-color: var(--blue-mid);
         box-shadow: 0 0 0 3px rgba(24, 95, 165, 0.1);
+      }
+      .search-clear {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        border: none;
+        background: var(--bg-tertiary);
+        color: var(--text-secondary);
+        border-radius: 50%;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        line-height: 1;
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      .search-clear:hover {
+        background: var(--border-hover);
+        color: var(--text);
+      }
+      .search-wrap.has-value .search-clear {
+        display: flex;
       }
 
       /* Country grid */
@@ -1198,13 +1226,25 @@
       <div class="container">
         <!-- COUNTRIES TAB -->
         <div id="page-countries" class="page active">
-          <div class="search-wrap">
+          <div class="search-wrap" id="country-search-wrap">
             <i class="ti ti-search" aria-hidden="true"></i>
             <input
               type="text"
+              id="country-search"
               placeholder="Search countries..."
-              oninput="filterCountries(this.value)"
+              oninput="
+                filterCountries(this.value);
+                toggleClear('country-search-wrap', this.value);
+              "
             />
+            <button
+              class="search-clear"
+              onclick="clearSearch('country-search', 'country-search-wrap')"
+              tabindex="-1"
+              aria-label="Clear search"
+            >
+              <i class="ti ti-x" style="font-size: 11px"></i>
+            </button>
           </div>
           <div class="country-grid" id="country-grid"></div>
           <div id="country-detail"></div>
@@ -1230,14 +1270,25 @@
               <div class="lbl">UK slots</div>
             </div>
           </div>
-          <div class="search-wrap">
+          <div class="search-wrap" id="uni-search-wrap">
             <i class="ti ti-search" aria-hidden="true"></i>
             <input
               type="text"
               id="uni-search"
               placeholder="Search universities or countries..."
-              oninput="filterUnis()"
+              oninput="
+                filterUnis();
+                toggleClear('uni-search-wrap', this.value);
+              "
             />
+            <button
+              class="search-clear"
+              onclick="clearSearch('uni-search', 'uni-search-wrap')"
+              tabindex="-1"
+              aria-label="Clear search"
+            >
+              <i class="ti ti-x" style="font-size: 11px"></i>
+            </button>
           </div>
           <div class="filter-row" id="filter-row"></div>
           <div class="uni-list" id="uni-list"></div>
@@ -3827,7 +3878,7 @@
       };
 
       let activeCountry = null;
-      let activeFilter = "All";
+      let activeFilter = new Set();
       let checks = {};
 
       function showTab(tab, btn) {
@@ -4063,11 +4114,12 @@
       }
 
       function filterUnis() {
-        const q = document.getElementById("uni-search").value.toLowerCase();
+        const q =
+          document.getElementById("uni-search")?.value.toLowerCase() || "";
         const base =
-          activeFilter === "All"
+          activeFilter.size === 0
             ? TOP100
-            : TOP100.filter((u) => u.country === activeFilter);
+            : TOP100.filter((u) => activeFilter.has(u.country));
         renderUnis(
           base.filter(
             (u) =>
@@ -4078,11 +4130,27 @@
       }
 
       function setFilter(country, btn) {
-        activeFilter = country;
+        if (country === "All") {
+          activeFilter.clear();
+        } else {
+          if (activeFilter.has(country)) {
+            activeFilter.delete(country);
+          } else {
+            activeFilter.add(country);
+          }
+        }
+        // Update button states
         document
           .querySelectorAll(".filter-btn")
           .forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
+        if (activeFilter.size === 0) {
+          document.querySelector(".filter-btn").classList.add("active"); // "All" is first
+        } else {
+          document.querySelectorAll(".filter-btn").forEach((b) => {
+            const label = b.textContent.replace(/\s*\(\d+\)$/, "");
+            if (activeFilter.has(label)) b.classList.add("active");
+          });
+        }
         filterUnis();
       }
 
@@ -4213,9 +4281,9 @@
         const q =
           document.getElementById("uni-search")?.value.toLowerCase() || "";
         const base =
-          activeFilter === "All"
+          activeFilter.size === 0
             ? TOP100
-            : TOP100.filter((u) => u.country === activeFilter);
+            : TOP100.filter((u) => activeFilter.has(u.country));
         return base.filter(
           (u) =>
             u.name.toLowerCase().includes(q) ||
@@ -4302,6 +4370,21 @@
           return;
         }
       });
+
+      function toggleClear(wrapId, value) {
+        const wrap = document.getElementById(wrapId);
+        if (wrap) wrap.classList.toggle("has-value", value.length > 0);
+      }
+
+      function clearSearch(inputId, wrapId) {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+        input.value = "";
+        input.focus();
+        toggleClear(wrapId, "");
+        if (inputId === "country-search") filterCountries("");
+        else filterUnis();
+      }
 
       renderCountries(COUNTRIES);
       renderFilters();
